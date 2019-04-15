@@ -6,14 +6,30 @@ export class Provider extends Component {
 
   state = {
     signedIn: false,
-    firstName: ''
+    firstName: null
+  }
+
+  logIn = name => {
+    this.setState({ 
+      firstName: name,
+      signIn: true
+    })
+  }
+
+  logOut = () => {
+    this.setState({ 
+      firstName: null,
+      signedIn: false
+    })
   }
 
   render(){
     return (
       <AuthenticationContext.Provider value = {{
+        firstName: this.state.firstName,
         signedIn: this.state.signedIn,
-        name: this.state.firstName
+        logIn: this.logIn,
+        logOut: this.logOut
       }}>
         {this.props.children}
       </AuthenticationContext.Provider>

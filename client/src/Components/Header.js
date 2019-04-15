@@ -9,18 +9,18 @@ const Header = () => {
       <div className="bounds">
         <NavLink to='/' className="header--logo">Courses</NavLink>
         <Consumer>
-          {({signedIn, name}) => (
+          {({signedIn, firstName, logOut}) => (
             <nav>
               {signedIn ? 
-                <div>
-                  <span>Welcome {name}</span>
-                  <NavLink to="/" className="signout">Sign Out</NavLink>
-                </div>
+                <React.Fragment>
+                  <span>Welcome {firstName}</span>
+                  <NavLink to="/" className="signout" onClick={logOut}>Sign Out</NavLink>
+                </React.Fragment>
               :
-                <div>
+                <React.Fragment>
                   <NavLink to='/signup' className="signup">Sign Up</NavLink>
                   <NavLink to='/signin' className="signin">Sign In</NavLink>
-                </div>
+                </React.Fragment>
               }
             </nav>
           )}

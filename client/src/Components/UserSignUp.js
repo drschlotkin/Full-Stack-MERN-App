@@ -25,6 +25,7 @@ export default class UserSignUp extends Component {
         isSignedIn: true
       }).then(() => {
         this.props.history.push('/courses');
+       
       }).catch(err => {
         console.log(err)
       });

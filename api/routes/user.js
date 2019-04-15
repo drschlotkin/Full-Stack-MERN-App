@@ -18,9 +18,10 @@ router.get('/users', authenticateUser, (req, res, next) => {
   let user = req.currentUser[0]
   res.json({
     "ID": user._id,
-    "Name": `${user.firstName} ${user.lastName}`,
-    "Email Address": user.emailAddress,
-    "Password (hashed)": user.password
+    "firstName": user.firstName,
+    "lastName": user.lastName,
+    "userName": user.emailAddress,
+    "password": user.password
   });
 });
 

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {NavLink} from 'react-router-dom';
-// import {Consumer} from './Context'
+import {Consumer} from './Context'
 import axios from 'axios';
 
 export default class UserSignIn extends Component {
@@ -20,8 +20,13 @@ export default class UserSignIn extends Component {
       }
     }).then(res => {
       this.props.history.push('/courses');
-     
-      console.log(res.data)
+      <Consumer>
+        {value => {
+          const { logIn} = value
+          logIn(res.data.emailAddress)
+        }}
+      </Consumer>
+      
     }).catch(err => {
       console.log('unsuccessful')
       console.log(err)
