@@ -1,26 +1,26 @@
 import React, {Component} from 'react';
 import ReactMarkdown from 'react-markdown';
-import axios from 'axios'
+import axios from 'axios';
 import {NavLink} from 'react-router-dom';
 
 export default class CourseDetail extends Component {
+  
   state = {
     course: [],
     user: []
-  }
+  };
 
   componentDidMount(){
     axios.get(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
       .then(res => {
-        
         this.setState({
           course: res.data,
           user: res.data.user
-        })
+        });
       }).catch(err => {
-        console.log(err)
-      })
-  }
+        console.log(err);
+      });
+  };
 
   render(){
     return (
@@ -29,7 +29,7 @@ export default class CourseDetail extends Component {
           <div className="bounds">
             <div className="grid-100">
               <span>
-                <NavLink to='/' className="button">Update Course</NavLink>
+                <NavLink to={`/courses/${this.state.course._id}/update`} className="button">Update Course</NavLink>
                 <NavLink to='/' className="button">Delete Course</NavLink>
               </span>
               <NavLink to='/' className="button button-secondary">Return to List</NavLink>
@@ -65,9 +65,8 @@ export default class CourseDetail extends Component {
               </ul>
             </div>
           </div>
-
         </div>
       </div>
-    )
-  }
-}
+    );
+  };
+};

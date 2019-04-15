@@ -8,6 +8,17 @@ export default class CreateCourse extends Component {
     this.props.history.push("/");
   };
 
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  };
+
+  onSubmit = (event) => {
+    event.preventDefault();
+    
+  }
+  
   render(){
     return (
       <div className="bounds course--detail">
@@ -21,17 +32,19 @@ export default class CreateCourse extends Component {
             </ul>
           </div>
         </div> */}
-        <form>
+        <form onSubmit = {this.onSubmit}>
           <div className="grid-66">
             <div className="course--header">
               <h4 className="course--label">Course</h4>
               <div>
-              <input id="title" name="title" type="text" className="input-title course--title--input" placeholder="Course title..." value="" />
+              <input id="title" name="title" type="text" className="input-title course--title--input" placeholder="Course title..." onChange={this.handleChange}/>
               </div>
               <p>By Joe Smith</p>
             </div>
             <div className="course--description">
-              <div><textarea id="description" name="description" className="" placeholder="Course description..."></textarea></div>
+              <div>
+                <textarea id="description" name="description" className="" placeholder="Course description..." onChange={this.handleChange}></textarea>
+              </div>
             </div>
           </div>
 
@@ -42,13 +55,13 @@ export default class CreateCourse extends Component {
                   <h4>Estimated Time</h4>
                   <div>
                     <input id="estimatedTime" name="estimatedTime" type="text" className="course--time--input"
-                      placeholder="Hours" value="" />
+                      placeholder="Hours" onChange={this.handleChange}/>
                   </div>
                 </li>
                 <li className="course--stats--list--item">
                   <h4>Materials Needed</h4>
                   <div>
-                    <textarea id="materialsNeeded" name="materialsNeeded" className="" placeholder="List materials..."></textarea>
+                    <textarea id="materialsNeeded" name="materialsNeeded" className="" placeholder="List materials..." onChange={this.handleChange}></textarea>
                   </div>
                 </li>
               </ul>

@@ -1,23 +1,23 @@
 import React, {Component} from 'react';
-// import CourseDetail from './CourseDetail'
 import {NavLink} from 'react-router-dom';
-import axios from 'axios'
+import axios from 'axios';
 
 export default class Courses extends Component {
+  
   state = {
     courses: []
-  }
+  };
   
   componentDidMount(){
     axios.get(`http://localhost:5000/api/courses`)
       .then(res => {
         this.setState({
           courses: res.data
-        })
+        });
       }).catch(err => {
         console.log(err)
-      })
-  }
+      });
+  };
 
   render(){
     return (
@@ -30,7 +30,6 @@ export default class Courses extends Component {
               <h3 className="course--title">{course.title}</h3>
             </NavLink>
           </div>
-        
         )}
         
         <div className="grid-33">
@@ -44,6 +43,6 @@ export default class Courses extends Component {
           </NavLink>
         </div>
       </div>
-    )
-  }
-}
+    );
+  };
+};
