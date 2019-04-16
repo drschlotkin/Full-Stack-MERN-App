@@ -1,20 +1,42 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+import {withRouter} from 'react-router';
+// import {BrowserRouter} from 'react-router-dom';
 
-const AuthenticationContext = React.createContext();
+const AuthContext = React.createContext();
 
 export class Provider extends Component {
 
   state = {
+    firstName: null,
+    lastName:null,
+    emailAddress: null,
+    password: null,
     signedIn: false,
-    firstName: null
   }
 
-  logIn = name => {
-    this.setState({ 
-      firstName: name,
-      signIn: true
-    })
+  logIn = (event) => {
+    event.preventDefault();
+    console.log(this.state.firstName)
+    console.log(this.state.signedIn)
+    axios.get(`http://localhost:5000/api/users`, {
+      auth: {
+        username: this.state.emailAddress,
+        password: this.state.password
+      }
+    }).then(res => {
+      this.setState({
+        firstName: res.data.firstName,
+        signedIn: true
+      })
+      // this.props.history.push('/courses');
+      console.log('successful')
+    }).catch(err => {
+      console.log('unsuccessful')
+      console.log(err)
+    });
   }
+
 
   logOut = () => {
     this.setState({ 
@@ -23,18 +45,35 @@ export class Provider extends Component {
     })
   }
 
+
+  userData = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  };
+
   render(){
     return (
-      <AuthenticationContext.Provider value = {{
+      
+      <AuthContext.Provider value = {{
         firstName: this.state.firstName,
         signedIn: this.state.signedIn,
-        logIn: this.logIn,
-        logOut: this.logOut
+        actions: {
+          signedIn: this.state.signedIn,
+          logIn: this.logIn,
+          logOut: this.logOut,
+          userData: this.userData
+        }
       }}>
         {this.props.children}
-      </AuthenticationContext.Provider>
+      </AuthContext.Provider>
+      
     )
   }
 }
 
-export const Consumer = AuthenticationContext.Consumer
+
+
+// export default withRouter(Provider)
+export const Consumer = AuthContext.Consumer
+

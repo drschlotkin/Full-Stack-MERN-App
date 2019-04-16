@@ -3,18 +3,18 @@ import {NavLink} from 'react-router-dom';
 import { Consumer } from './Context'
 
 const Header = () => {
-
+  
   return (
     <div className="header">
       <div className="bounds">
         <NavLink to='/' className="header--logo">Courses</NavLink>
         <Consumer>
-          {({signedIn, firstName, logOut}) => (
+          {({firstName, signedIn, actions}) => (
             <nav>
               {signedIn ? 
                 <React.Fragment>
                   <span>Welcome {firstName}</span>
-                  <NavLink to="/" className="signout" onClick={logOut}>Sign Out</NavLink>
+                  <NavLink to="/" className="signout" onClick={actions.logOut}>Sign Out</NavLink>
                 </React.Fragment>
               :
                 <React.Fragment>
