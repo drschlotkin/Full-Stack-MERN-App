@@ -21,7 +21,6 @@ export default class UpdateCourse extends Component {
           description: res.data.description,
           estimatedTime: res.data.estimatedTime,
           materialsNeeded: res.data.materialsNeeded,
-
         });
       }).catch(err => {
         console.log(err);
@@ -37,9 +36,8 @@ export default class UpdateCourse extends Component {
     this.setState({
       [event.target.name]: event.target.value
     });
-  }
+  };
   
-
   render(){
     return (
       <div className="bounds course--detail">

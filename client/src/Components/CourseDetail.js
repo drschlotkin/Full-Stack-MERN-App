@@ -2,20 +2,25 @@ import React, {Component} from 'react';
 import ReactMarkdown from 'react-markdown';
 import axios from 'axios';
 import {NavLink} from 'react-router-dom';
+import {Consumer} from './Context'
 
 export default class CourseDetail extends Component {
   
   state = {
     course: [],
-    user: []
+    user: [],
+    userID: []
   };
 
+  
   componentDidMount(){
     axios.get(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
       .then(res => {
+       
         this.setState({
           course: res.data,
-          user: res.data.user
+          user: res.data.user,
+          userID: res.data.user._id
         });
       }).catch(err => {
         console.log(err);
@@ -28,11 +33,22 @@ export default class CourseDetail extends Component {
         <div className="actions--bar">
           <div className="bounds">
             <div className="grid-100">
-              <span>
-                <NavLink to={`/courses/${this.state.course._id}/update`} className="button">Update Course</NavLink>
-                <NavLink to='/' className="button">Delete Course</NavLink>
-              </span>
+           
+              <Consumer>
+                {({user, actions}) => (
+                  <span>    
+                  {user.signedIn && user.ID === this.state.userID ?
+                    <React.Fragment>
+                      <NavLink to={`/courses/${this.state.course._id}/update`} className="button">Update Course</NavLink>
+                      <button className="button" onClick={actions.deleteCourse}>Delete Course</button>
+                    </React.Fragment>
+                    : null
+                  }
+                  </span>
+                )}
+              </Consumer>
               <NavLink to='/' className="button button-secondary">Return to List</NavLink>
+              
             </div>
           </div>
         </div>
@@ -45,7 +61,7 @@ export default class CourseDetail extends Component {
               <p>By {this.state.user.firstName} {this.state.user.lastName}</p>
             </div>
             <div className="course--description">
-              <ReactMarkdown source ={this.state.course.description} />
+              <ReactMarkdown>{this.state.course.description}</ReactMarkdown> 
             </div>
           </div>
 
@@ -58,9 +74,7 @@ export default class CourseDetail extends Component {
                 </li>
                 <li className="course--stats--list--item">
                   <h4>Materials Needed</h4>
-                  <ul>
-                    <ReactMarkdown source ={this.state.course.materialsNeeded} />
-                  </ul>
+                  <ReactMarkdown>{this.state.course.materialsNeeded}</ReactMarkdown>
                 </li>
               </ul>
             </div>
