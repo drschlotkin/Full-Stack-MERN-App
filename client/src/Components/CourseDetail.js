@@ -1,22 +1,27 @@
-import React, {Component} from 'react';
+/* COURSE DETAIL COMPONENT
+==========================
+(1) Show selected course details
+(2) Update and Delete are only available to authorized user(s) */
+
+
+
+import React, { Component } from 'react';
 import ReactMarkdown from 'react-markdown';
 import axios from 'axios';
-import {NavLink} from 'react-router-dom';
-import {Consumer} from './Context'
+import { NavLink } from 'react-router-dom';
+import { Consumer } from './Context'
 
 export default class CourseDetail extends Component {
   
   state = {
-    course: [],
-    user: [],
-    userID: []
+    course: '',
+    user: '',
+    userID: ''
   };
 
-  
   componentDidMount(){
     axios.get(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
       .then(res => {
-       
         this.setState({
           course: res.data,
           user: res.data.user,
@@ -27,7 +32,10 @@ export default class CourseDetail extends Component {
       });
   };
 
+
   render(){
+    const { _id, title, description, materialsNeeded, estimatedTime } = { ...this.state.course }
+    const { userID, user } = { ...this.state }
     return (
       <div>
         <div className="actions--bar">
@@ -35,20 +43,20 @@ export default class CourseDetail extends Component {
             <div className="grid-100">
            
               <Consumer>
-                {({user, actions}) => (
+                {({ user, actions }) => (
                   <span>    
-                  {user.signedIn && user.ID === this.state.userID ?
-                    <React.Fragment>
-                      <NavLink to={`/courses/${this.state.course._id}/update`} className="button">Update Course</NavLink>
-                      <button className="button" onClick={actions.deleteCourse}>Delete Course</button>
-                    </React.Fragment>
-                    : null
-                  }
+                    {user.signedIn && user.ID === userID ?
+                      <React.Fragment>
+                        <NavLink to={`/courses/${_id}/update`} className="button">Update Course</NavLink>
+                        <button className="button" onClick={actions.deleteCourse}>Delete Course</button>
+                      </React.Fragment>
+                      : null
+                    }
                   </span>
                 )}
               </Consumer>
+
               <NavLink to='/' className="button button-secondary">Return to List</NavLink>
-              
             </div>
           </div>
         </div>
@@ -57,11 +65,11 @@ export default class CourseDetail extends Component {
           <div className="grid-66">
             <div className="course--header">
               <h4 className="course--label">Course</h4>
-              <h3 className="course--title">{this.state.course.title}</h3>
-              <p>By {this.state.user.firstName} {this.state.user.lastName}</p>
+              <h3 className="course--title">{title}</h3>
+              <p>By {user.firstName} {user.lastName}</p>
             </div>
             <div className="course--description">
-              <ReactMarkdown>{this.state.course.description}</ReactMarkdown> 
+              <ReactMarkdown>{description}</ReactMarkdown> 
             </div>
           </div>
 
@@ -70,11 +78,11 @@ export default class CourseDetail extends Component {
               <ul className="course--stats--list">
                 <li className="course--stats--list--item">
                   <h4>Estimated Time</h4>
-                  <h3>{this.state.course.estimatedTime}</h3>
+                  <h3>{estimatedTime}</h3>
                 </li>
                 <li className="course--stats--list--item">
                   <h4>Materials Needed</h4>
-                  <ReactMarkdown>{this.state.course.materialsNeeded}</ReactMarkdown>
+                  <ReactMarkdown>{materialsNeeded}</ReactMarkdown>
                 </li>
               </ul>
             </div>

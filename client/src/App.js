@@ -10,6 +10,7 @@ import UserSignIn from './Components/UserSignIn';
 import UserSignUp from './Components/UserSignUp';
 import UserSignOut from './Components/UserSignOut';
 import PageNotFound from './Components/PageNotFound';
+import PrivateRoute from './Components/PrivateRoute';
 
 
 export default class App extends Component {
@@ -21,8 +22,8 @@ export default class App extends Component {
             <Switch>
               <Route exact path='/courses' render={() =>  <Redirect to='/' />}/>   
               <Route exact path='/' component={Courses} />
-              <Route path='/courses/create' component={CreateCourse} />
-              <Route exact path='/courses/:id' component={CourseDetail} />
+              <PrivateRoute exact path='/courses/create' component={CreateCourse} />
+              <PrivateRoute exact path='/courses/:id' component={CourseDetail} />
               <Route path='/courses/:id/update' component={UpdateCourse} />
               <Route path='/signin' component={UserSignIn} />
               <Route path='/signup' component={UserSignUp} />

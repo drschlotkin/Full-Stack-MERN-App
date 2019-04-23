@@ -1,195 +1,59 @@
+/* CONTEXT API COMPONENT
+========================
+(1) This component is used for managing global state of currently signed in user
+(2) Made available throughout application using <Consumer> components. */
+
+
+
 import React, { Component } from 'react';
 import axios from 'axios';
-import {withRouter} from 'react-router';
-// import auth from './auth';
-
-const AuthContext = React.createContext();
+import { withRouter } from 'react-router';
 
 
-const emailRegex = RegExp(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
-
-const initialState = {
-  firstName: '',
-  lastName:'',
-  emailAddress: '',
-  password: '',
-  confirmPassword: '',
-  signedIn: false,
-  title: '',
-  description: '',
-  estimatedTime: '',
-  materialsNeeded: '',
-  ID: '',
-  errors: [],
-  signInErrors: false,
-  signUpErrors: false
+// Set user returned from {UserSignUp} or {UserSignIn} to global state
+const reducer = (state, action) => { 
+  const {firstName, lastName, userName, password, ID} = {...action.payload}
+  switch (action.type) {
+    case 'SIGN_IN':
+      return { firstName, lastName, emailAddress: userName, password, ID, signedIn: true };
+    default:
+      return state;
+  }; 
 };
 
 class Provider extends Component {
 
   // Set initial state 
-  state = initialState;
-
+  state = {
+    firstName: '',
+    lastName:'',
+    emailAddress: '',
+    password: '',
+    confirmPassword: '',
+    signedIn: false,
+    ID: '',
+    dispatch: action => this.setState(state => reducer(state, action))
+  };
   
 
-  // Assign each state value from input fields
-  stateData = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  };
-
-
-  // Reset state to default
+  // Clear state if user logs out
   logOut = () => {
-    this.setState(initialState);
+    this.setState({
+      ID: '',
+      firstName: '',
+      lastName: '',
+      emailAddress: '',
+      password: '',
+      confirmPassword: '',
+      signedIn: false
+    });
     this.props.history.push("/");
   };
 
 
-  // Set user state if log in is successful
-  logIn = () => {
-    axios.get(`http://localhost:5000/api/users`, {
-      auth: {
-        username: this.state.emailAddress,
-        password: this.state.password
-      }
-    }).then(res => {
-      this.setState({
-        ID: res.data.ID,
-        firstName: res.data.firstName,
-        lastName: res.data.lastName,
-        emailAddress: res.data.userName,
-        signedIn: true
-      })
-      this.props.history.push("/");
-    }).catch(err => {
-      console.log(err);
-    });
-  };
-
-
-  // Cancel form event
-  cancel = (event) => {
-    event.preventDefault();
+  // Redirect to main page if logout action is cancelled
+  cancel = () => {
     this.props.history.push("/");
-  };
-
-  
-  // USER SIGN UP VALIDATION
-
-  signupValidation = (event) => {
-    event.preventDefault();
-    let errors = []
-    const {firstName, lastName, emailAddress, password, confirmPassword} = {...this.state}
-    
-    if(firstName.length === 0) errors.push('Please provide a value for First Name');
-    if(lastName.length === 0) errors.push('Please provide a value for Last Name');
-
-    if(password.length === 0){
-      errors.push('Please provide a value for Password');
-    }else if(password !== confirmPassword){
-      errors.push('Passwords do not match');
-    };
-
-    if(emailAddress.length === 0) {
-      errors.push('Please provide a value for Email Address');
-    }else if(!emailRegex.test(emailAddress)){
-      errors.push('Invalid email address');
-    };
-    
-    this.setState({
-      errors: errors,
-      signUpErrors: true,
-      signInErrors: false
-    })
-
-    if(errors.length === 0) this.signup()
-  }
-
-
-  signinValidation = (event) => {
-    event.preventDefault();
-    
-    let errors = []
-    const {emailAddress, password} = {...this.state}
-
-    if(password.length === 0){
-      errors.push('Please provide a value for Password');
-    };
-
-    if(emailAddress.length === 0) {
-      errors.push('Please provide a value for Email Address');
-    }else if(!emailRegex.test(emailAddress)){
-      errors.push('Invalid email address');
-    };
-
-    this.setState({
-      errors: errors,
-      signInErrors: true,
-      signUpErrors: false
-    })
-
-    if(errors.length === 0) this.logIn()
-  }
-
-  signup = () => {
-    axios.post(`http://localhost:5000/api/users`, {
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      emailAddress: this.state.emailAddress,
-      password:this.state.password,
-      isSignedIn: true
-    }).then(() => {
-      this.logIn()
-      
-    }).catch(err => {
-      console.log(err.response.status)
-    });
-  }; 
-
-
-
-  // Validation for Create Course fields
-  courseValidation = (event) => {
-    event.preventDefault();
-    // auth.course();
-    let errors = [];
-    let {title, description} = {...this.state};
-    
-    if(title.length === 0) errors.push('Please provide a value for Title');
-    
-    if(description.length === 0) errors.push('Please provide a value for Description');
-    
-    this.setState({
-      errors: errors
-    });
-
-    // If there are no validation errors, call this.createCourse()
-    if(errors.length === 0) this.createCourse();
-  };
-
-
-  // Save course to database if user is logged in
-  createCourse = () => {
-    axios({
-      method: 'post',
-      auth: {
-        username: this.state.emailAddress,
-        password: this.state.password
-      },
-      url: `http://localhost:5000/api/courses`,
-      data: {
-        title: this.state.title,
-        description: this.state.description,
-        estimatedTime: this.state.estimatedTime,
-        materialsNeeded:this.state.materialsNeeded,
-      }
-      }).then(() => {
-        this.props.history.push('/courses');
-      }).catch(err => {
-        console.log(err)
-      });
   };
 
 
@@ -213,16 +77,10 @@ class Provider extends Component {
     return (
       <AuthContext.Provider value = {{
         user: {...this.state},
-        signedIn: this.state.signedIn,
         actions: {
-          cancel: this.cancel,
-          logIn: this.logIn,
           logOut: this.logOut,
-          stateData: this.stateData,
-          courseValidation: this.courseValidation,
-          signupValidation: this.signupValidation,
-          signinValidation: this.signinValidation,
-          deleteCourse: this.deleteCourse
+          deleteCourse: this.deleteCourse,
+          cancel: this.cancel
         }
       }}>
         {this.props.children}
@@ -232,5 +90,6 @@ class Provider extends Component {
 };
 
 export default withRouter(Provider);
+export const AuthContext = React.createContext();
 export const Consumer = AuthContext.Consumer;
 

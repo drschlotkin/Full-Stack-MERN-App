@@ -1,5 +1,10 @@
+/* USER SIGN OUT COMPONENT
+========================== */
+
+
+
 import React from 'react';
-import {Consumer} from './Context'
+import {Consumer} from './Context';
 
 const UserSignOut = () => (
   <div className="bounds">
@@ -14,8 +19,7 @@ const UserSignOut = () => (
       )}
     </Consumer>
     </div>
-  </div>
-    
+  </div>   
 )
 
 export default UserSignOut;

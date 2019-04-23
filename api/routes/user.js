@@ -16,6 +16,7 @@ Authenticate login and return current user information */
 
 router.get('/users', authenticateUser, (req, res, next) => {
   let user = req.currentUser[0]
+  console.log(user)
   res.json({
     "ID": user._id,
     "firstName": user.firstName,

@@ -1,5 +1,12 @@
-import React, {Component} from 'react';
-import {NavLink} from 'react-router-dom';
+/* COURSES COMPONENT (Main Page)
+================================
+(1) Render list of courses from database
+(2) User can create courses or view course details only if they're logged in*/
+
+
+
+import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 
 export default class Courses extends Component {

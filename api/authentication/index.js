@@ -9,11 +9,15 @@ const { User } = require('../models/UserModel');
 const authenticateUser = (req, res, next) => {
   let message = null;
   const credentials = auth(req);
+  
   if (credentials){
     User.find({emailAddress: credentials.name})
         .then(user => {
           if(user.length > 0){
+            console.log(credentials.pass)
             const authenticated = bcryptjs.compareSync(credentials.pass, user[0].password);
+            
+            
             if (authenticated) {
               console.log(`Authentication successful for username: ${user[0].firstName} ${user[0].lastName}`);
               req.currentUser = user;
