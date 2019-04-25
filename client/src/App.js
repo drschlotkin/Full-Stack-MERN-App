@@ -25,9 +25,9 @@ export default class App extends Component {
               <PrivateRoute exact path='/courses/create' component={CreateCourse} />
               <PrivateRoute exact path='/courses/:id' component={CourseDetail} />
               <Route path='/courses/:id/update' component={UpdateCourse} />
-              <Route path='/signin' component={UserSignIn} />
-              <Route path='/signup' component={UserSignUp} />
-              <Route path='/signout' component={UserSignOut} />
+              <Route exact path='/signin' component={UserSignIn} />
+              <Route exact path='/signup' component={UserSignUp} />
+              <PrivateRoute path='/signout' component={UserSignOut} />
               <Route component = {PageNotFound} />
             </Switch>
         </Provider>

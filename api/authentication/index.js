@@ -7,9 +7,10 @@ const { User } = require('../models/UserModel');
 
 // Authentication middleware
 const authenticateUser = (req, res, next) => {
+ 
   let message = null;
   const credentials = auth(req);
-  
+  console.log(credentials)
   if (credentials){
     User.find({emailAddress: credentials.name})
         .then(user => {

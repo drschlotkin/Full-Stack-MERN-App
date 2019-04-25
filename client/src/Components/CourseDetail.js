@@ -33,9 +33,23 @@ export default class CourseDetail extends Component {
   };
 
 
+  deleteCourse = (user) => {
+    axios.delete(`http://localhost:5000/api/${window.location.pathname}`, {
+      auth: {
+        username: user.emailAddress,
+        password: user.password
+      }
+    }).then(() => {
+      this.props.history.push('/courses');
+    }).catch(err => {
+      console.log(err.response.status)
+    });
+  };
+
+
   render(){
-    const { _id, title, description, materialsNeeded, estimatedTime } = { ...this.state.course }
-    const { userID, user } = { ...this.state }
+    const { _id, title, description, materialsNeeded, estimatedTime } = this.state.course
+    const { userID, user } = this.state
     return (
       <div>
         <div className="actions--bar">
@@ -43,17 +57,22 @@ export default class CourseDetail extends Component {
             <div className="grid-100">
            
               <Consumer>
-                {({ user, actions }) => (
-                  <span>    
-                    {user.signedIn && user.ID === userID ?
-                      <React.Fragment>
-                        <NavLink to={`/courses/${_id}/update`} className="button">Update Course</NavLink>
-                        <button className="button" onClick={actions.deleteCourse}>Delete Course</button>
-                      </React.Fragment>
-                      : null
-                    }
-                  </span>
-                )}
+                {({user}) => {
+                  
+                  return (
+                    
+
+                    <span>    
+                      {user.signedIn && user.ID === userID ?
+                        <React.Fragment>
+                          <NavLink to={`/courses/${_id}/update`} className="button">Update Course</NavLink>
+                          <button className="button" onClick={() => this.deleteCourse(user)} >Delete Course</button>
+                        </React.Fragment>
+                        : null
+                      }
+                    </span>
+                  )
+                }}
               </Consumer>
 
               <NavLink to='/' className="button button-secondary">Return to List</NavLink>

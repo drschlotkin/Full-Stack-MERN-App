@@ -3,7 +3,7 @@ import React from 'react';
 const PageNotFound = () => (
   <div className="bounds">
     <h1>Error</h1>
-    <p>Sorry! We just encountered an unexpected error.</p>
+    <h3>Sorry! The page you are trying to reach does not exist</h3>
   </div>
 );
 

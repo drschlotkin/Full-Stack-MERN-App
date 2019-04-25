@@ -27,13 +27,13 @@ export default class CreateCourse extends Component {
     event.preventDefault();
     
     let errors = [];
-    let {title, description} = {...this.state};
+    let {title, description} = this.state
     
-    if(title.length === 0) errors.push('Please enter a Title');
+    if(title.length === 0) errors.push('Please enter a Title for your course');
     
-    if(description.length === 0) errors.push('Please enter a Description');
+    if(description.length === 0) errors.push('Please enter a Description for your course');
     
-    this.setState({errors: errors});
+    this.setState({ errors });
 
     if(errors.length === 0) this.createCourse(user);
   };
@@ -44,7 +44,7 @@ export default class CreateCourse extends Component {
   Save course to database, along with user information */
 
   createCourse = (user) => {
-    const {title, description, estimatedTime, materialsNeeded} = {...this.state}
+    const { title, description, estimatedTime, materialsNeeded } = this.state
     axios({
       method: 'post',
       auth: {
@@ -52,12 +52,8 @@ export default class CreateCourse extends Component {
         password: user.password
       },
       url: `http://localhost:5000/api/courses`,
-      data: {
-        title,
-        description,
-        estimatedTime,
-        materialsNeeded,
-      }}).then(() => {
+      data: { title, description, estimatedTime, materialsNeeded }
+      }).then(() => {
         this.props.history.push('/courses');
       }).catch(err => {
         console.log(err)
@@ -79,7 +75,7 @@ export default class CreateCourse extends Component {
   
 
   render(){
-    const { errors } = {...this.state}
+    const { errors } = this.state
     return (
       <div className="bounds course--detail">
         <h1>Create Course</h1>
@@ -91,7 +87,7 @@ export default class CreateCourse extends Component {
               <React.Fragment>
                 {errors.length > 0 ?    
                   <div>
-                    <h2 className="validation--errors--label">Validation errors</h2>
+                    <h2 className="validation--errors--label">Error!</h2>
                       <div className="validation-errors">
                         <ul>
                           {Object.keys(errors).map((key, i) => {

@@ -1,10 +1,13 @@
 /* USER SIGN OUT COMPONENT
-========================== */
+========================== 
+(1) Confirm that user wants to sign out
+(2) If user is not signed in, redirect to sign in page */
 
 
 
 import React from 'react';
 import {Consumer} from './Context';
+
 
 const UserSignOut = () => (
   <div className="bounds">
@@ -13,7 +16,7 @@ const UserSignOut = () => (
     <Consumer>
       {({actions}) => (
         <React.Fragment>
-          <button className="button" onClick={actions.logOut}>Yes</button>
+          <button className="button" onClick={actions.signOut}>Yes</button>
           <button className="button" onClick={actions.cancel}>No</button>
         </React.Fragment>
       )}
@@ -22,4 +25,4 @@ const UserSignOut = () => (
   </div>   
 )
 
-export default UserSignOut;
+export default UserSignOut

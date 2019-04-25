@@ -10,16 +10,17 @@ import axios from 'axios';
 import { withRouter } from 'react-router';
 
 
-// Set user returned from {UserSignUp} or {UserSignIn} to global state
+// Reducer to apply user to global state
 const reducer = (state, action) => { 
-  const {firstName, lastName, userName, password, ID} = {...action.payload}
+  const { firstName, lastName, emailAddress, password, ID } = action.payload;
   switch (action.type) {
     case 'SIGN_IN':
-      return { firstName, lastName, emailAddress: userName, password, ID, signedIn: true };
+      return { firstName, lastName, emailAddress, password, ID, signedIn: true };
     default:
       return state;
   }; 
 };
+
 
 class Provider extends Component {
 
@@ -32,12 +33,13 @@ class Provider extends Component {
     confirmPassword: '',
     signedIn: false,
     ID: '',
+    errors: [],
     dispatch: action => this.setState(state => reducer(state, action))
   };
   
 
   // Clear state if user logs out
-  logOut = () => {
+  signOut = () => {
     this.setState({
       ID: '',
       firstName: '',
@@ -50,37 +52,44 @@ class Provider extends Component {
     this.props.history.push("/");
   };
 
-
-  // Redirect to main page if logout action is cancelled
-  cancel = () => {
+  
+  // Redirect to main page if signOut is cancelled
+  cancelSignOut = () => {
     this.props.history.push("/");
   };
 
 
-  // Delete course if user is authenticated
-  deleteCourse = () => {
-    axios.delete(`http://localhost:5000/api/${window.location.pathname}`, {
-      auth: {
-        username: this.state.emailAddress,
-        password: this.state.password
-      }
-    }).then(() => {
-      this.props.history.push('/courses');
-    }).catch(err => {
-      console.log(err.response.status)
+  // /* USER GET ROUTE
+  // ==================
+  // Assign logged in user to state  */
+  
+  signIn = (user) => {
+    const { emailAddress, password } = user;
+    axios.get(`http://localhost:5000/api/users`, {
+      auth: { username: emailAddress, password }
+      }).then(res => {
+        const { ID, firstName, lastName, emailAddress } = res.data;
+        this.setState({ ID, firstName, lastName, emailAddress, password, signedIn: true })
+        this.props.history.push("/");
+      }).catch(err => {
+        if (err.response.status === 401){
+          let errors = []
+          errors.push('Incorrect username and/or password')
+          this.setState({ errors })
+        } 
     });
   };
-
+ 
 
   // Provide state and actions to forms
   render(){
     return (
       <AuthContext.Provider value = {{
-        user: {...this.state},
+        user: this.state,
         actions: {
-          logOut: this.logOut,
-          deleteCourse: this.deleteCourse,
-          cancel: this.cancel
+          signIn: this.signIn,
+          signOut: this.signOut,
+          cancelSignOut: this.cancelSignOut,
         }
       }}>
         {this.props.children}

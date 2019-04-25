@@ -19,9 +19,16 @@ export default class UserSignUp extends Component {
     lastName: '',
     emailAddress: '',
     password: '',
-    errors: []
+    errors: [],
+    existingUser: false
   };
 
+  // Reset errors
+  componentDidMount = () => {
+    this.setState({
+      errors: []
+    })
+  }
 
   /* USER SIGN UP VALIDATION
   ==========================
@@ -47,7 +54,7 @@ export default class UserSignUp extends Component {
       errors.push('Passwords do not match');
     };
     
-    this.setState({ errors: errors });
+    this.setState({ errors });
 
     if (errors.length === 0) this.signup(dispatch);
   };
@@ -58,7 +65,7 @@ export default class UserSignUp extends Component {
   Save user to database and sign user in to application*/
 
   signup = (dispatch) => {
-    const { firstName, lastName, emailAddress, password } = { ...this.state }
+    const { firstName, lastName, emailAddress, password } = this.state;
     axios.post(`http://localhost:5000/api/users`, {
       firstName,
       lastName,
@@ -72,8 +79,8 @@ export default class UserSignUp extends Component {
           password: this.state.password
         }
       }).then(res => {
-        const {ID, firstName, lastName, userName} = { ...res.data };
-        const userData = { ID, firstName, lastName, userName, password: this.state.password };
+        const {ID, firstName, lastName, emailAddress} = res.data;
+        const userData = { ID, firstName, lastName, emailAddress, password: this.state.password };
         dispatch({
           type: 'SIGN_IN',
           payload: userData
@@ -81,9 +88,15 @@ export default class UserSignUp extends Component {
         this.props.history.push("/");
       }).catch(err => {
         console.log(err);
+        
       });
     }).catch(err => {
-      console.log(err.response.status)
+      if (err.response.status === 409){
+       let errors = []
+       errors.push('An account already exists with that username')
+       this.setState({ errors })
+        
+      }
     });
   }; 
 
@@ -97,14 +110,13 @@ export default class UserSignUp extends Component {
 
 
   // Cancel form event
-  cancel = (event) => {
-    event.preventDefault();
+  cancel = () => {
     this.props.history.push("/");
   };
 
 
   render(){
-    const { errors } = { ...this.state }
+    const { errors } = this.state
     return (
       <div className="bounds">
         <div className="grid-33 centered signin">
@@ -116,7 +128,7 @@ export default class UserSignUp extends Component {
                 <React.Fragment>
                   {errors.length > 0  ?    
                     <div>
-                    <h2 className="validation--errors--label">Validation errors</h2>
+                    <h2 className="validation--errors--label">Error!</h2>
                       <div className="validation-errors">
                         <ul>
                         {Object.keys(errors).map((key, i) => {

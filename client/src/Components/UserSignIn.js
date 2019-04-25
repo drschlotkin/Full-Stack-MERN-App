@@ -8,27 +8,35 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Consumer } from './Context';
-import axios from 'axios';
 
+
+// Regular expression to check for valid email address
 const emailRegex = RegExp(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
 
-export default class UserSignIn extends Component {
 
-  state= {
+export default class UserSignIn extends Component {
+  
+  state = {
+    errors: [],
     emailAddress: '',
-    password: '',
-    errors: []
+    password: ''
+  }
+  
+  // Reset error messages when page loads/reloads
+  componentDidMount = () => {
+    this.setState( { errors: [] } );
   };
 
 
-  /* USER SIGN IN VALIDATION
+   /* USER SIGN IN VALIDATION
   ==========================
   Validate all user inputs before proceeding to POST route*/
 
-  validation = (dispatch, e) => {
+  validation = (e, signIn) => {
     e.preventDefault();
+
     let errors = [];
-    const { emailAddress, password } = { ...this.state };
+    const { emailAddress, password } = this.state;
 
     if (password.length === 0) errors.push('Please enter a Password');
     
@@ -38,34 +46,15 @@ export default class UserSignIn extends Component {
       errors.push('Invalid email address');
     };
 
-    this.setState({ errors: errors });
+    this.setState({ errors });
 
-    if (errors.length === 0) this.signIn(dispatch);
+    if (errors.length === 0){
+      const {emailAddress, password} = this.state;
+      const user = { emailAddress, password};
+      signIn(user);
+    };
   };
-  
 
-  /* USER GET ROUTE
-  ==================
-  Assign user to state by dispatching data to Provider class (./Context/index.js) */
-  
-  signIn = (dispatch) => {
-    axios.get(`http://localhost:5000/api/users`, {
-      auth: {
-        username: this.state.emailAddress,
-        password: this.state.password
-      }}).then(res => {
-        const { ID, firstName, lastName, userName } = {...res.data};
-        const userData = { ID, firstName, lastName, userName, password: this.state.password };
-        dispatch({
-          type: 'SIGN_IN',
-          payload: userData
-        });
-        this.props.history.push("/");
-      }).catch(err => {
-        console.log(err);
-    });
-  };
-      
 
   // Assign each state value from input fields
   stateData = (event) => {
@@ -75,28 +64,30 @@ export default class UserSignIn extends Component {
   };
 
 
-  // Cancel form event
+  // Cancel sign in
   cancel = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     this.props.history.push("/");
   };
+ 
 
+  /* RENDER ELEMENTS TO DOM
+  ========================= */
 
   render(){
-    const { errors } = { ...this.state }
+    const { errors } = this.state;   
     return (
       <div className="bounds">
         <div className="grid-33 centered signin">
           <h1>Sign In</h1>
-          <div>
-
+          
           <Consumer>       
-            {({user})  => {  
+            {({actions, user})  => {  
               return (
                 <React.Fragment>
                   {errors.length > 0 ?    
                     <div>
-                      <h2 className="validation--errors--label">Validation errors</h2>
+                      <h2 className="validation--errors--label">Error!</h2>
                         <div className="validation-errors">
                           <ul>
                             {Object.keys(errors).map((key, i) => {
@@ -107,9 +98,18 @@ export default class UserSignIn extends Component {
                           </ul>
                         </div>
                     </div>
-                      : null
+                    : user.errors.length > 0 ?
+                    <div>
+                    <h2 className="validation--errors--label">Error!</h2>
+                      <div className="validation-errors">
+                        <ul>
+                          <li>{user.errors}</li>
+                        </ul>
+                      </div>
+                    </div>
+                    : null
                   }    
-                  <form onSubmit ={this.validation.bind(this, user.dispatch)}>
+                  <form onSubmit ={e => this.validation(e, actions.signIn)}>
                     <div>
                       <input id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" onChange={this.stateData} />
                     </div>
@@ -126,10 +126,11 @@ export default class UserSignIn extends Component {
             }}
           </Consumer>
 
-          </div>
+          
           <p>Don't have a user account? <NavLink to='/signup'>Click here</NavLink> to sign up!</p>
         </div>
       </div>
     );
   };
 };
+

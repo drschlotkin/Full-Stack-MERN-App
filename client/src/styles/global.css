@@ -746,7 +746,7 @@ input:focus {
 }
 .validation-errors ul {
   color: #7c689b;
-  padding: 15px 0 40px 10px;
+  padding: 15px 0 40px 0px;
 }
 
 /* reduce bottom margin on the course description textarea element */

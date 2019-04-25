@@ -25,14 +25,8 @@ export default class UpdateCourse extends Component {
   componentDidMount(){
     axios.get(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
       .then(res => {
-        const {user, title, description, estimatedTime, materialsNeeded} = {...res.data};
-        this.setState({
-          user,
-          title,
-          description,
-          estimatedTime,
-          materialsNeeded
-        });
+        const { user, title, description, estimatedTime, materialsNeeded } = res.data;
+        this.setState({ user, title, description, estimatedTime, materialsNeeded });
       }).catch(err => {
         console.log(err);
     });
@@ -40,20 +34,20 @@ export default class UpdateCourse extends Component {
 
 
    /* UPDATE COURSE VALIDATION
-  ==========================
+  ============================
   Validate all inputs before proceeding to PUT route*/
 
   validation = (user, event) => {
     event.preventDefault();
     
     let errors = [];
-    let { title, description } = { ...this.state };
+    let { title, description } = this.state
     
-    if (title.length === 0) errors.push('Please enter a Title');
+    if (title.length === 0) errors.push('Please enter a Title for your course');
     
-    if (description.length === 0) errors.push('Please enter a Description');
+    if (description.length === 0) errors.push('Please enter a Description for your course');
     
-    this.setState({ errors: errors });
+    this.setState({ errors });
 
     if (errors.length === 0) this.updateCourse(user);
   };
@@ -64,21 +58,16 @@ export default class UpdateCourse extends Component {
   Update course in database */
 
   updateCourse = (user) => {
-    const { title, description, estimatedTime, materialsNeeded } = { ...this.state }
+    const { title, description, estimatedTime, materialsNeeded } = this.state;
+    const { emailAddress, password } = user;
+    const url = this.props.match.params.id;
     axios({
       method: 'put',
-      auth: {
-        username: user.emailAddress,
-        password: user.password
-      },
-      url: `http://localhost:5000/api/courses/${this.props.match.params.id}`,
-      data: { 
-        title, 
-        description, 
-        estimatedTime, 
-        materialsNeeded 
-      }}).then(() => {
-        this.props.history.push(`/courses/${this.props.match.params.id}`);
+      auth: { username: emailAddress, password },
+      url: `http://localhost:5000/api/courses/${url}`,
+      data: { title, description, estimatedTime, materialsNeeded }
+      }).then(() => {
+        this.props.history.push(`/courses/${url}`);
       }).catch(err => {
         console.log(err);
     }); 
@@ -101,19 +90,19 @@ export default class UpdateCourse extends Component {
   
   
   render(){
-    const { errors } = {...this.state}
-    const { title, description, estimatedTime, materialsNeeded } = { ...this.state }
+    const { errors } = this.state;
+    const { title, description, estimatedTime, materialsNeeded } = this.state;
     return (
       <div className="bounds course--detail">
         <h1>Update Course</h1>
 
         <Consumer>
-          {({user}) => {         
+          {({user}) => {       
             return (
               <React.Fragment>
                 {errors.length > 0 ?    
                   <div>
-                    <h2 className="validation--errors--label">Validation errors</h2>
+                    <h2 className="validation--errors--label">Error!</h2>
                       <div className="validation-errors">
                         <ul>
                           {Object.keys(errors).map((key, i) => {
