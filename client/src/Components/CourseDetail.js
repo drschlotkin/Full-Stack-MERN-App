@@ -58,7 +58,7 @@ export default class CourseDetail extends Component {
            
               <Consumer>
                 {({user}) => {
-                  
+              
                   return (
                     
 

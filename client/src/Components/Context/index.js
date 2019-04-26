@@ -37,6 +37,10 @@ class Provider extends Component {
     dispatch: action => this.setState(state => reducer(state, action))
   };
   
+  componentDidMount = () => {
+    console.log('yo')
+  }
+
 
   // Clear state if user logs out
   signOut = () => {
@@ -49,6 +53,7 @@ class Provider extends Component {
       confirmPassword: '',
       signedIn: false
     });
+    localStorage.clear()
     this.props.history.push("/");
   };
 
@@ -70,6 +75,9 @@ class Provider extends Component {
       }).then(res => {
         const { ID, firstName, lastName, emailAddress } = res.data;
         this.setState({ ID, firstName, lastName, emailAddress, password, signedIn: true })
+        
+        localStorage.setItem('user', JSON.stringify(this.state))
+        
         this.props.history.push("/");
       }).catch(err => {
         if (err.response.status === 401){
@@ -79,7 +87,8 @@ class Provider extends Component {
         } 
     });
   };
- 
+
+
 
   // Provide state and actions to forms
   render(){

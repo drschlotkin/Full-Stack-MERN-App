@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Consumer } from './Context';
 
+
 export default class UpdateCourse extends Component {
   
   state = {
@@ -23,6 +24,8 @@ export default class UpdateCourse extends Component {
 
   
   componentDidMount(){
+    console.log('here?')
+    
     axios.get(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
       .then(res => {
         const { user, title, description, estimatedTime, materialsNeeded } = res.data;
@@ -87,11 +90,13 @@ export default class UpdateCourse extends Component {
       [event.target.name]: event.target.value
     });
   };
-  
+
+
   
   render(){
     const { errors } = this.state;
     const { title, description, estimatedTime, materialsNeeded } = this.state;
+    
     return (
       <div className="bounds course--detail">
         <h1>Update Course</h1>

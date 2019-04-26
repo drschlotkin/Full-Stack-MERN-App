@@ -8,7 +8,6 @@
 import React from 'react';
 import {Consumer} from './Context';
 
-
 const UserSignOut = () => (
   <div className="bounds">
     <h1>Are you sure you want to sign out?</h1>
@@ -17,7 +16,7 @@ const UserSignOut = () => (
       {({actions}) => (
         <React.Fragment>
           <button className="button" onClick={actions.signOut}>Yes</button>
-          <button className="button" onClick={actions.cancel}>No</button>
+          <button className="button" onClick={actions.cancelSignOut}>No</button>
         </React.Fragment>
       )}
     </Consumer>
@@ -25,4 +24,4 @@ const UserSignOut = () => (
   </div>   
 )
 
-export default UserSignOut
+export default UserSignOut;

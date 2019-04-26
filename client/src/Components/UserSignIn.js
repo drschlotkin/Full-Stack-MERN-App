@@ -24,7 +24,12 @@ export default class UserSignIn extends Component {
   
   // Reset error messages when page loads/reloads
   componentDidMount = () => {
-    this.setState( { errors: [] } );
+    // this.setState( { errors: [] } );
+    // if(localStorage.getItem('user')){
+    //   this.props.history.push('/');
+    // }else{
+      
+    // }
   };
 
 
@@ -79,54 +84,57 @@ export default class UserSignIn extends Component {
     return (
       <div className="bounds">
         <div className="grid-33 centered signin">
-          <h1>Sign In</h1>
-          
-          <Consumer>       
-            {({actions, user})  => {  
-              return (
-                <React.Fragment>
-                  {errors.length > 0 ?    
-                    <div>
-                      <h2 className="validation--errors--label">Error!</h2>
-                        <div className="validation-errors">
-                          <ul>
-                            {Object.keys(errors).map((key, i) => {
-                              return (
-                                <li key={key}>{errors[i]}</li>
-                              )
-                            })}
-                          </ul>
-                        </div>
-                    </div>
-                    : user.errors.length > 0 ?
-                    <div>
+        <Consumer> 
+        {({actions, user}) => {  
+          return ( 
+          <React.Fragment>
+            {!user.signedIn ?
+              <React.Fragment>
+                <h1>Sign In</h1>
+                {errors.length > 0 ?    
+                  <div>
                     <h2 className="validation--errors--label">Error!</h2>
                       <div className="validation-errors">
                         <ul>
-                          <li>{user.errors}</li>
+                          {Object.keys(errors).map((key, i) => {
+                            return (
+                              <li key={key}>{errors[i]}</li>
+                            )
+                          })}
                         </ul>
                       </div>
+                  </div>
+                  : user.errors.length > 0 ?
+                  <div>
+                  <h2 className="validation--errors--label">Error!</h2>
+                    <div className="validation-errors">
+                      <ul>
+                        <li>{user.errors}</li>
+                      </ul>
                     </div>
-                    : null
-                  }    
-                  <form onSubmit ={e => this.validation(e, actions.signIn)}>
-                    <div>
-                      <input id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" onChange={this.stateData} />
-                    </div>
-                    <div>
-                      <input id="password" name="password" type="password" className="" placeholder="Password" onChange={this.stateData} />
-                    </div>
-                    <div className="grid-100 pad-bottom">
-                      <button className="button" type="submit">Sign In</button>
-                      <button className="button button-secondary" onClick={this.cancel}>Cancel</button>
-                    </div>
-                  </form>
-                </React.Fragment>
-              )
-            }}
+                  </div>
+                  : null
+                }    
+                <form onSubmit ={e => this.validation(e, actions.signIn)}>
+                  <div>
+                    <input id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" onChange={this.stateData} />
+                  </div>
+                  <div>
+                    <input id="password" name="password" type="password" className="" placeholder="Password" onChange={this.stateData} />
+                  </div>
+                  <div className="grid-100 pad-bottom">
+                    <button className="button" type="submit">Sign In</button>
+                    <button className="button button-secondary" onClick={this.cancel}>Cancel</button>
+                  </div>
+                </form>
+              </React.Fragment>
+            :<div><p>you're already signed in dougie</p></div>
+            }
+              </React.Fragment>
+          )
+          }}
+            
           </Consumer>
-
-          
           <p>Don't have a user account? <NavLink to='/signup'>Click here</NavLink> to sign up!</p>
         </div>
       </div>
