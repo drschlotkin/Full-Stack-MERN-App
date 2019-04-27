@@ -1,9 +1,11 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 const UnhandledError = () => (
-  <div className="bounds">
-    <h1>Error</h1>
-    <h3>Sorry! The page you are trying to reach does not exist</h3>
+  <div className="error">
+    <h1>500 - Internal Server Error</h1>
+    &nbsp;
+    <p>Go back to course listings <NavLink to='/'>here</NavLink></p>
   </div>
 );
 

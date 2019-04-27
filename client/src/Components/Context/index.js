@@ -1,6 +1,6 @@
 /* CONTEXT API COMPONENT
 ========================
-(1) This component is used for managing global state of currently signed in user
+(1) This component is used for managing global state of signed in user
 (2) Made available throughout application using <Consumer> components. */
 
 
@@ -10,12 +10,12 @@ import axios from 'axios';
 import { withRouter } from 'react-router';
 
 
-// Reducer to apply user to global state
+// Reducer to apply user data to global state
 const reducer = (state, action) => { 
-  const { firstName, lastName, emailAddress, password, ID } = action.payload;
+  const { firstName, lastName, emailAddress, password, ID, signedIn } = action.payload;
   switch (action.type) {
     case 'SIGN_IN':
-      return { firstName, lastName, emailAddress, password, ID, signedIn: true };
+      return { firstName, lastName, emailAddress, password, ID, signedIn };
     default:
       return state;
   }; 
@@ -38,8 +38,11 @@ class Provider extends Component {
   };
   
   componentDidMount = () => {
-    console.log('yo')
-  }
+    if(localStorage.getItem('user')){
+      const {ID, firstName, lastName, emailAddress, signedIn, password} = JSON.parse(localStorage.getItem('user'));
+      this.setState({ID, firstName, lastName, emailAddress, signedIn, password }); 
+    };
+  };
 
 
   // Clear state if user logs out
@@ -66,7 +69,7 @@ class Provider extends Component {
 
   // /* USER GET ROUTE
   // ==================
-  // Assign logged in user to state  */
+  // Save logged in user to state and to local storage. Redirect back to previous page */
   
   signIn = (user) => {
     const { emailAddress, password } = user;
@@ -75,10 +78,14 @@ class Provider extends Component {
       }).then(res => {
         const { ID, firstName, lastName, emailAddress } = res.data;
         this.setState({ ID, firstName, lastName, emailAddress, password, signedIn: true })
-        
-        localStorage.setItem('user', JSON.stringify(this.state))
-        
-        this.props.history.push("/");
+        if(localStorage.getItem('location')){
+          const location = JSON.parse(localStorage.getItem('location'))
+          this.props.history.push(`${location}`);
+        }else{
+          this.props.history.push('/');
+        }
+        localStorage.clear()
+        localStorage.setItem('user', JSON.stringify(this.state))    
       }).catch(err => {
         if (err.response.status === 401){
           let errors = []
@@ -110,4 +117,3 @@ class Provider extends Component {
 export default withRouter(Provider);
 export const AuthContext = React.createContext();
 export const Consumer = AuthContext.Consumer;
-

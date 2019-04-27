@@ -1,7 +1,8 @@
 /* SIGN UP COMPONENT
 ====================
-(1) Create user, save to database, and automatically sign in. 
-(2) Display validation errors if necessary */
+(1) Create user
+(2) Save user to database, global state and localStorage
+(3) Automatically sign user in to application*/
 
 
 
@@ -19,15 +20,12 @@ export default class UserSignUp extends Component {
     lastName: '',
     emailAddress: '',
     password: '',
-    errors: [],
-    existingUser: false
+    errors: []
   };
 
   // Reset errors
   componentDidMount = () => {
-    this.setState({
-      errors: []
-    })
+    this.setState({ errors: [] })
   }
 
   /* USER SIGN UP VALIDATION
@@ -37,19 +35,19 @@ export default class UserSignUp extends Component {
   validation = (dispatch, event) => {
     event.preventDefault();
     let errors = []
-    const { firstName, lastName, emailAddress, password, confirmPassword } = { ...this.state }
+    const { firstName, lastName, emailAddress, password, confirmPassword } = this.state
     
-    if (firstName.length === 0) errors.push('Please enter your First Name');
-    if (lastName.length === 0) errors.push('Please enter your Last Name');
+    if (firstName.length === 0) errors.push('Please enter your first name');
+    if (lastName.length === 0) errors.push('Please enter your last name');
 
     if (emailAddress.length === 0) {
-      errors.push('Please enter a valid Email Address');
+      errors.push('Please enter an email address');
     } else if (!emailRegex.test(emailAddress)){
-      errors.push('Invalid email address');
+      errors.push('Please enter a VALID email address');
     };
 
     if (password.length === 0){
-      errors.push('Please enter a Password');
+      errors.push('Please enter a password');
     } else if (password !== confirmPassword){
       errors.push('Passwords do not match');
     };
@@ -66,38 +64,30 @@ export default class UserSignUp extends Component {
 
   signup = (dispatch) => {
     const { firstName, lastName, emailAddress, password } = this.state;
-    axios.post(`http://localhost:5000/api/users`, {
-      firstName,
-      lastName,
-      emailAddress,
-      password,
-      isSignedIn: true
-    }).then(() => {
-      axios.get(`http://localhost:5000/api/users`, {
-        auth: {
-          username: this.state.emailAddress,
-          password: this.state.password
-        }
-      }).then(res => {
-        const {ID, firstName, lastName, emailAddress} = res.data;
-        const userData = { ID, firstName, lastName, emailAddress, password: this.state.password };
-        dispatch({
-          type: 'SIGN_IN',
-          payload: userData
-        });
-        this.props.history.push("/");
+    const history = this.props.history
+    axios.post(`http://localhost:5000/api/users`, { firstName, lastName, emailAddress, password, isSignedIn: true})
+      .then(() => {
+        axios.get(`http://localhost:5000/api/users`, { auth: { username: emailAddress, password }})
+          .then(res => {
+            const { ID } = res.data;
+            const user = { ID, firstName, lastName, emailAddress, password, signedIn: true };
+            localStorage.clear()
+            localStorage.setItem('user', JSON.stringify(user))
+            dispatch({
+              type: 'SIGN_IN',
+              payload: user
+            });
+            history.push("/");
+          }).catch(err => {
+            err.response.status === 500 ? history.push('/error') : history.push('/notfound');
+          });
       }).catch(err => {
-        console.log(err);
-        
+        if (err.response.status === 409){
+          let errors = [];
+          errors.push('An account already exists with that username');
+          this.setState({ errors }); 
+        };
       });
-    }).catch(err => {
-      if (err.response.status === 409){
-       let errors = []
-       errors.push('An account already exists with that username')
-       this.setState({ errors })
-        
-      }
-    });
   }; 
 
 

@@ -24,14 +24,13 @@ export default class UpdateCourse extends Component {
 
   
   componentDidMount(){
-    console.log('here?')
-    
+    const history = this.props.history
     axios.get(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
       .then(res => {
         const { user, title, description, estimatedTime, materialsNeeded } = res.data;
         this.setState({ user, title, description, estimatedTime, materialsNeeded });
       }).catch(err => {
-        console.log(err);
+        err.response.status === 500 ? history.push('/error') : history.push('/notfound');
     });
   };
 
@@ -42,27 +41,23 @@ export default class UpdateCourse extends Component {
 
   validation = (user, event) => {
     event.preventDefault();
-    
     let errors = [];
-    let { title, description } = this.state
-    
-    if (title.length === 0) errors.push('Please enter a Title for your course');
-    
-    if (description.length === 0) errors.push('Please enter a Description for your course');
-    
+    let { title, description } = this.state;
+    title.length === 0 && errors.push('Please enter a title for your course');  
+    description.length === 0 && errors.push('Please enter a description for your course');
     this.setState({ errors });
-
-    if (errors.length === 0) this.updateCourse(user);
+    errors.length === 0 && this.updateCourse(user);
   };
 
 
  /* COURSE PUT ROUTE
   ==================
-  Update course in database */
+  Update course */
 
   updateCourse = (user) => {
     const { title, description, estimatedTime, materialsNeeded } = this.state;
     const { emailAddress, password } = user;
+    const history = this.props.history
     const url = this.props.match.params.id;
     axios({
       method: 'put',
@@ -70,9 +65,9 @@ export default class UpdateCourse extends Component {
       url: `http://localhost:5000/api/courses/${url}`,
       data: { title, description, estimatedTime, materialsNeeded }
       }).then(() => {
-        this.props.history.push(`/courses/${url}`);
+        history.push(`/courses/${url}`);
       }).catch(err => {
-        console.log(err);
+        err.response.status === 500 ? history.push('/error') : history.push('/notfound');
     }); 
   };
 

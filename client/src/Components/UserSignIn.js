@@ -24,12 +24,7 @@ export default class UserSignIn extends Component {
   
   // Reset error messages when page loads/reloads
   componentDidMount = () => {
-    // this.setState( { errors: [] } );
-    // if(localStorage.getItem('user')){
-    //   this.props.history.push('/');
-    // }else{
-      
-    // }
+    this.setState( { errors: [] } );
   };
 
 
@@ -43,20 +38,19 @@ export default class UserSignIn extends Component {
     let errors = [];
     const { emailAddress, password } = this.state;
 
-    if (password.length === 0) errors.push('Please enter a Password');
+    if (password.length === 0) errors.push('Please enter a password');
     
     if (emailAddress.length === 0) {
-      errors.push('Please enter a valid Email Address');
+      errors.push('Please enter an email address');
     } else if (!emailRegex.test(emailAddress)){
-      errors.push('Invalid email address');
+      errors.push('Please enter a VALID email address');
     };
 
     this.setState({ errors });
 
     if (errors.length === 0){
       const {emailAddress, password} = this.state;
-      const user = { emailAddress, password};
-      signIn(user);
+      signIn({emailAddress, password});
     };
   };
 
@@ -79,18 +73,18 @@ export default class UserSignIn extends Component {
   /* RENDER ELEMENTS TO DOM
   ========================= */
 
-  render(){
-    const { errors } = this.state;   
-    return (
-      <div className="bounds">
-        <div className="grid-33 centered signin">
-        <Consumer> 
-        {({actions, user}) => {  
-          return ( 
-          <React.Fragment>
-            {!user.signedIn ?
+  
+render(){
+  const { errors } = this.state;   
+  return (
+    <div className="bounds">
+      <div className="grid-33 centered signin">
+        <h1>Sign In</h1>
+        
+        <Consumer>       
+          {({actions, user})  => {  
+            return (
               <React.Fragment>
-                <h1>Sign In</h1>
                 {errors.length > 0 ?    
                   <div>
                     <h2 className="validation--errors--label">Error!</h2>
@@ -128,17 +122,12 @@ export default class UserSignIn extends Component {
                   </div>
                 </form>
               </React.Fragment>
-            :<div><p>you're already signed in dougie</p></div>
-            }
-              </React.Fragment>
-          )
+            )
           }}
-            
-          </Consumer>
-          <p>Don't have a user account? <NavLink to='/signup'>Click here</NavLink> to sign up!</p>
-        </div>
+        </Consumer>
+        <p>Don't have a user account? <NavLink to='/signup'>Click here</NavLink> to sign up!</p>
       </div>
-    );
-  };
+    </div>
+  );
 };
-
+};

@@ -754,3 +754,9 @@ input:focus {
   margin-bottom: 20px;
 }
 
+/* center error message in ErrorRoute.js */
+.error {
+  max-width: 1250px;
+  margin: 0 auto;
+  text-align: center;
+}

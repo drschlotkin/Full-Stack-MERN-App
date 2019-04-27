@@ -11,6 +11,7 @@ import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 import { Consumer } from './Context'
 
+
 export default class CourseDetail extends Component {
   
   state = {
@@ -20,6 +21,7 @@ export default class CourseDetail extends Component {
   };
 
   componentDidMount(){
+    const history = this.props.history
     axios.get(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
       .then(res => {
         this.setState({
@@ -28,21 +30,22 @@ export default class CourseDetail extends Component {
           userID: res.data.user._id
         });
       }).catch(err => {
-        console.log(err);
+        err.response.status === 500 ? history.push('/error') : history.push('/notfound');
       });
   };
 
 
   deleteCourse = (user) => {
+    const history = this.props.history
     axios.delete(`http://localhost:5000/api/${window.location.pathname}`, {
       auth: {
         username: user.emailAddress,
         password: user.password
       }
     }).then(() => {
-      this.props.history.push('/courses');
+      history.push('/courses');
     }).catch(err => {
-      console.log(err.response.status)
+      err.response.status === 500 ? history.push('/error') : history.push('/notfound');
     });
   };
 
@@ -58,10 +61,7 @@ export default class CourseDetail extends Component {
            
               <Consumer>
                 {({user}) => {
-              
                   return (
-                    
-
                     <span>    
                       {user.signedIn && user.ID === userID ?
                         <React.Fragment>

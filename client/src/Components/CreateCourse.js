@@ -19,23 +19,19 @@ export default class CreateCourse extends Component {
   };
 
 
+
   /* CREATE COURSE VALIDATION
   ==========================
   Validate all inputs before proceeding to POST route*/
 
   validation = (user, event) => {
     event.preventDefault();
-    
     let errors = [];
-    let {title, description} = this.state
-    
-    if(title.length === 0) errors.push('Please enter a Title for your course');
-    
-    if(description.length === 0) errors.push('Please enter a Description for your course');
-    
+    let {title, description} = this.state;
+    title.length === 0 && errors.push('Please enter a title for your course');
+    description.length === 0 && errors.push('Please enter a description for your course');
     this.setState({ errors });
-
-    if(errors.length === 0) this.createCourse(user);
+    errors.length === 0 && this.createCourse(user);
   };
 
 
@@ -45,6 +41,7 @@ export default class CreateCourse extends Component {
 
   createCourse = (user) => {
     const { title, description, estimatedTime, materialsNeeded } = this.state
+    const history = this.props.history
     axios({
       method: 'post',
       auth: {
@@ -54,9 +51,9 @@ export default class CreateCourse extends Component {
       url: `http://localhost:5000/api/courses`,
       data: { title, description, estimatedTime, materialsNeeded }
       }).then(() => {
-        this.props.history.push('/courses');
+        history.push('/courses');
       }).catch(err => {
-        console.log(err)
+        err.response.status === 500 ? history.push('/error') : history.push('/notfound');
     });
   };
 
@@ -82,7 +79,6 @@ export default class CreateCourse extends Component {
 
         <Consumer>
           {({user}) => {
-            
             return(
               <React.Fragment>
                 {errors.length > 0 ?    

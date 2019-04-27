@@ -1,7 +1,7 @@
 /* COURSES COMPONENT (Main Page)
 ================================
 (1) Render list of courses from database
-(2) User can create courses or view course details only if they're logged in*/
+(2) User can create courses and update/delete only if they're logged in*/
 
 
 
@@ -16,13 +16,14 @@ export default class Courses extends Component {
   };
   
   componentDidMount(){
+    const history = this.props.history
     axios.get(`http://localhost:5000/api/courses`)
       .then(res => {
         this.setState({
           courses: res.data
         });
       }).catch(err => {
-        console.log(err)
+        err.response.status === 500 ? history.push('/error') : history.push('/notfound');
       });
   };
 
