@@ -9,7 +9,7 @@ import React, { Component } from 'react';
 import ReactMarkdown from 'react-markdown';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
-import { Consumer } from './Context'
+import { Consumer } from './Context';
 
 
 export default class CourseDetail extends Component {
@@ -20,7 +20,10 @@ export default class CourseDetail extends Component {
     userID: ''
   };
 
+  
   componentDidMount(){
+    
+    localStorage.setItem('location', JSON.stringify(window.location.pathname))
     const history = this.props.history
     axios.get(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
       .then(res => {
@@ -30,7 +33,7 @@ export default class CourseDetail extends Component {
           userID: res.data.user._id
         });
       }).catch(err => {
-        err.response.status === 500 ? history.push('/error') : history.push('/notfound');
+        if (err) history.push('/error')
       });
   };
 
@@ -45,11 +48,13 @@ export default class CourseDetail extends Component {
     }).then(() => {
       history.push('/courses');
     }).catch(err => {
-      err.response.status === 500 ? history.push('/error') : history.push('/notfound');
+      if (err) history.push('/error')
     });
   };
+  
 
-
+  /* RENDER ELEMENTS TO DOM
+  ========================= */
   render(){
     const { _id, title, description, materialsNeeded, estimatedTime } = this.state.course
     const { userID, user } = this.state

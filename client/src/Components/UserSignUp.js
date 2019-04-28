@@ -11,7 +11,9 @@ import { NavLink } from 'react-router-dom';
 import { Consumer } from './Context';
 import axios from 'axios';
 
+// Regular expression to check for valid email address
 const emailRegex = RegExp(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
+
 
 export default class UserSignUp extends Component {
 
@@ -23,10 +25,12 @@ export default class UserSignUp extends Component {
     errors: []
   };
 
+
   // Reset errors
   componentDidMount = () => {
     this.setState({ errors: [] })
   }
+
 
   /* USER SIGN UP VALIDATION
   ==========================
@@ -67,7 +71,7 @@ export default class UserSignUp extends Component {
     const history = this.props.history
     axios.post(`http://localhost:5000/api/users`, { firstName, lastName, emailAddress, password, isSignedIn: true})
       .then(() => {
-        axios.get(`http://localhost:5000/api/users`, { auth: { username: emailAddress, password }})
+        axios.get(`http://localhost:5000/api/users`, { auth: { username: emailAddress, password } })
           .then(res => {
             const { ID } = res.data;
             const user = { ID, firstName, lastName, emailAddress, password, signedIn: true };
@@ -79,14 +83,16 @@ export default class UserSignUp extends Component {
             });
             history.push("/");
           }).catch(err => {
-            err.response.status === 500 ? history.push('/error') : history.push('/notfound');
+            if (err) history.push('/error')
           });
       }).catch(err => {
         if (err.response.status === 409){
           let errors = [];
           errors.push('An account already exists with that username');
           this.setState({ errors }); 
-        };
+        }else{
+          history.push('/error');
+        }
       });
   }; 
 
@@ -105,6 +111,8 @@ export default class UserSignUp extends Component {
   };
 
 
+  /* RENDER ELEMENTS TO DOM
+  ========================= */
   render(){
     const { errors } = this.state
     return (

@@ -16,6 +16,7 @@ import PrivateRoute from './Components/PrivateRoute';
 
 
 export default class App extends Component {
+
   render() {
     return (
       <BrowserRouter>
@@ -26,7 +27,7 @@ export default class App extends Component {
               <Route exact path='/' component={Courses} />
               <PrivateRoute exact path='/courses/create' component={CreateCourse} />
               <Route exact path='/courses/:id' component={CourseDetail} />
-              <PrivateRoute path='/courses/:id/update' component={UpdateCourse} />
+              <PrivateRoute exact path='/courses/:id/update' component={UpdateCourse} />
               <Route path='/signin' component={UserSignIn} />
               <Route exact path='/signup' component={UserSignUp} />
               <Route path='/signout' component={UserSignOut} />

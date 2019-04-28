@@ -31,19 +31,21 @@ class Provider extends Component {
     emailAddress: '',
     password: '',
     confirmPassword: '',
-    signedIn: false,
+    signedIn: null,
     ID: '',
     errors: [],
     dispatch: action => this.setState(state => reducer(state, action))
   };
   
+
+  // Use localStorage to keep user in state when page reloads
   componentDidMount = () => {
     if(localStorage.getItem('user')){
-      const {ID, firstName, lastName, emailAddress, signedIn, password} = JSON.parse(localStorage.getItem('user'));
-      this.setState({ID, firstName, lastName, emailAddress, signedIn, password }); 
+      const { ID, firstName, lastName, emailAddress, signedIn, password } = JSON.parse(localStorage.getItem('user'));
+      this.setState({ ID, firstName, lastName, emailAddress, signedIn, password }); 
     };
   };
-
+ 
 
   // Clear state if user logs out
   signOut = () => {
@@ -67,39 +69,43 @@ class Provider extends Component {
   };
 
 
-  // /* USER GET ROUTE
-  // ==================
-  // Save logged in user to state and to local storage. Redirect back to previous page */
+   /* USER GET ROUTE
+   ==================
+   (1) Save logged in user to state and to local storage. 
+   (2) Redirect back to previous page
+   (3) Redirect to course listings if a user is already signedIn (boolean: prevUser)*/
   
   signIn = (user) => {
+    let prevUser = false;
     const { emailAddress, password } = user;
     axios.get(`http://localhost:5000/api/users`, {
       auth: { username: emailAddress, password }
       }).then(res => {
         const { ID, firstName, lastName, emailAddress } = res.data;
-        this.setState({ ID, firstName, lastName, emailAddress, password, signedIn: true })
-        if(localStorage.getItem('location')){
-          const location = JSON.parse(localStorage.getItem('location'))
+        if (this.state.signedIn) prevUser = true;
+        this.setState({ ID, firstName, lastName, emailAddress, password, signedIn: true });
+        if(localStorage.getItem('location') && !prevUser){
+          const location = JSON.parse(localStorage.getItem('location'));
           this.props.history.push(`${location}`);
         }else{
           this.props.history.push('/');
         }
-        localStorage.clear()
-        localStorage.setItem('user', JSON.stringify(this.state))    
+        localStorage.clear();
+        localStorage.setItem('user', JSON.stringify(this.state));  
       }).catch(err => {
         if (err.response.status === 401){
-          let errors = []
-          errors.push('Incorrect username and/or password')
-          this.setState({ errors })
+          let errors = [];
+          errors.push('Incorrect username and/or password');
+          this.setState({ errors });
         } 
     });
   };
 
 
-
   // Provide state and actions to forms
   render(){
     return (
+
       <AuthContext.Provider value = {{
         user: this.state,
         actions: {
@@ -110,6 +116,7 @@ class Provider extends Component {
       }}>
         {this.props.children}
       </AuthContext.Provider>
+      
     );
   };
 };

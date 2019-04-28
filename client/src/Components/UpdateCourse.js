@@ -9,9 +9,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Consumer } from './Context';
+import {AuthContext} from './Context/index';
 
 
-export default class UpdateCourse extends Component {
+class UpdateCourse extends Component {
   
   state = {
     user: [],
@@ -22,19 +23,20 @@ export default class UpdateCourse extends Component {
     errors: []
   };
 
-  
-  componentDidMount(){
+
+  componentDidMount = () => {
     const history = this.props.history
     axios.get(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
       .then(res => {
         const { user, title, description, estimatedTime, materialsNeeded } = res.data;
+        if(user._id !== this.context.user.ID) return history.push('/forbidden');
         this.setState({ user, title, description, estimatedTime, materialsNeeded });
       }).catch(err => {
-        err.response.status === 500 ? history.push('/error') : history.push('/notfound');
+        if (err) history.push('/error')
     });
   };
 
-
+ 
    /* UPDATE COURSE VALIDATION
   ============================
   Validate all inputs before proceeding to PUT route*/
@@ -67,7 +69,7 @@ export default class UpdateCourse extends Component {
       }).then(() => {
         history.push(`/courses/${url}`);
       }).catch(err => {
-        err.response.status === 500 ? history.push('/error') : history.push('/notfound');
+        if (err) history.push('/error')
     }); 
   };
 
@@ -86,8 +88,9 @@ export default class UpdateCourse extends Component {
     });
   };
 
-
   
+   /* RENDER ELEMENTS TO DOM
+  ========================= */
   render(){
     const { errors } = this.state;
     const { title, description, estimatedTime, materialsNeeded } = this.state;
@@ -97,7 +100,7 @@ export default class UpdateCourse extends Component {
         <h1>Update Course</h1>
 
         <Consumer>
-          {({user}) => {       
+          {({user}) => {     
             return (
               <React.Fragment>
                 {errors.length > 0 ?    
@@ -168,3 +171,8 @@ export default class UpdateCourse extends Component {
     );
   };
 };
+
+UpdateCourse.contextType = AuthContext;
+export default UpdateCourse;
+
+

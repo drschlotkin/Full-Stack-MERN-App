@@ -22,6 +22,7 @@ export default class UserSignIn extends Component {
     password: ''
   }
   
+
   // Reset error messages when page loads/reloads
   componentDidMount = () => {
     this.setState( { errors: [] } );
@@ -34,11 +35,10 @@ export default class UserSignIn extends Component {
 
   validation = (e, signIn) => {
     e.preventDefault();
-
     let errors = [];
     const { emailAddress, password } = this.state;
-
-    if (password.length === 0) errors.push('Please enter a password');
+    
+    if (password.length === 0) errors.push('Please enter a password'); 
     
     if (emailAddress.length === 0) {
       errors.push('Please enter an email address');
@@ -65,69 +65,68 @@ export default class UserSignIn extends Component {
 
   // Cancel sign in
   cancel = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     this.props.history.push("/");
   };
  
 
   /* RENDER ELEMENTS TO DOM
   ========================= */
-
-  
-render(){
-  const { errors } = this.state;   
-  return (
-    <div className="bounds">
-      <div className="grid-33 centered signin">
-        <h1>Sign In</h1>
-        
-        <Consumer>       
-          {({actions, user})  => {  
-            return (
-              <React.Fragment>
-                {errors.length > 0 ?    
-                  <div>
+  render(){
+    const { errors } = this.state;   
+    return (
+      <div className="bounds">
+        <div className="grid-33 centered signin">
+          <h1>Sign In</h1>
+          
+          <Consumer>       
+            {({actions, user})  => {  
+              return (
+                <React.Fragment>
+                  {errors.length > 0 ?    
+                    <div>
+                      <h2 className="validation--errors--label">Error!</h2>
+                        <div className="validation-errors">
+                          <ul>
+                            {Object.keys(errors).map((key, i) => {
+                              return (
+                                <li key={key}>{errors[i]}</li>
+                              )
+                            })}
+                          </ul>
+                        </div>
+                    </div>
+                    : user.errors.length > 0 ?
+                    <div>
                     <h2 className="validation--errors--label">Error!</h2>
                       <div className="validation-errors">
                         <ul>
-                          {Object.keys(errors).map((key, i) => {
-                            return (
-                              <li key={key}>{errors[i]}</li>
-                            )
-                          })}
+                          <li>{user.errors}</li>
                         </ul>
                       </div>
-                  </div>
-                  : user.errors.length > 0 ?
-                  <div>
-                  <h2 className="validation--errors--label">Error!</h2>
-                    <div className="validation-errors">
-                      <ul>
-                        <li>{user.errors}</li>
-                      </ul>
                     </div>
-                  </div>
-                  : null
-                }    
-                <form onSubmit ={e => this.validation(e, actions.signIn)}>
-                  <div>
-                    <input id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" onChange={this.stateData} />
-                  </div>
-                  <div>
-                    <input id="password" name="password" type="password" className="" placeholder="Password" onChange={this.stateData} />
-                  </div>
-                  <div className="grid-100 pad-bottom">
-                    <button className="button" type="submit">Sign In</button>
-                    <button className="button button-secondary" onClick={this.cancel}>Cancel</button>
-                  </div>
-                </form>
-              </React.Fragment>
-            )
-          }}
-        </Consumer>
-        <p>Don't have a user account? <NavLink to='/signup'>Click here</NavLink> to sign up!</p>
+                    : null
+                  }    
+                  <form onSubmit ={e => this.validation(e, actions.signIn)}>
+                    <div>
+                      <input id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" onChange={this.stateData} />
+                    </div>
+                    <div>
+                      <input id="password" name="password" type="password" className="" placeholder="Password" onChange={this.stateData} />
+                    </div>
+                    <div className="grid-100 pad-bottom">
+                      <button className="button" type="submit">Sign In</button>
+                      <button className="button button-secondary" onClick={this.cancel}>Cancel</button>
+                    </div>
+                  </form>
+                </React.Fragment>
+              )
+            }}
+          </Consumer>
+          
+          <p>Don't have a user account? <NavLink to='/signup'>Click here</NavLink> to sign up!</p>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 };

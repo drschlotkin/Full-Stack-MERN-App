@@ -19,7 +19,6 @@ export default class CreateCourse extends Component {
   };
 
 
-
   /* CREATE COURSE VALIDATION
   ==========================
   Validate all inputs before proceeding to POST route*/
@@ -37,7 +36,7 @@ export default class CreateCourse extends Component {
 
  /* COURSE POST ROUTE
   ==================
-  Save course to database, along with user information */
+  Save course and the associated user information to database  */
 
   createCourse = (user) => {
     const { title, description, estimatedTime, materialsNeeded } = this.state
@@ -53,9 +52,10 @@ export default class CreateCourse extends Component {
       }).then(() => {
         history.push('/courses');
       }).catch(err => {
-        err.response.status === 500 ? history.push('/error') : history.push('/notfound');
+        if (err) history.push('/error')
     });
   };
+
 
   // Assign each state value from input fields
   stateData = (event) => {
@@ -64,6 +64,7 @@ export default class CreateCourse extends Component {
     });
   };
 
+
   // Cancel form event
   cancel = (event) => {
     event.preventDefault();
@@ -71,6 +72,8 @@ export default class CreateCourse extends Component {
   };
   
 
+  /* RENDER ELEMENTS TO DOM
+  ========================= */
   render(){
     const { errors } = this.state
     return (
@@ -142,6 +145,7 @@ export default class CreateCourse extends Component {
             )
           }}
         </Consumer>
+        
       </div> 
     );
   };

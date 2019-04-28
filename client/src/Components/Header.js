@@ -10,6 +10,7 @@ import { NavLink } from 'react-router-dom';
 import { Consumer } from './Context';
 
 const Header = () => {
+  
     return (
       <div className="header">
         <div className="bounds">
