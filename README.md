@@ -39,6 +39,8 @@ npm start
 
 To test the Express server, browse to the URL [http://localhost:5000/](http://localhost:5000/).
 
+<br />
+
 Secondly, open another terminal and change to the CLIENT directory to install the project's front end dependencies using `npm`.
 
 ```
@@ -51,4 +53,4 @@ And start the application.
 npm start
 ```
 
-Application will start on (http://localhost:3000/)
+Application will start on URL http://localhost:3000/
