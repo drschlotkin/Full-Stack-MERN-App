@@ -7,7 +7,7 @@
 * Created with MERN by Ewen Earle
 * Main design (HTML and CSS) provided by Team Treehouse
 
-## Getting Started
+## Getting started with back-end
 
 To get up and running with this project, run the following commands from the API directory of the folder that contains this README file.
 
@@ -39,7 +39,7 @@ npm start
 
 To test the Express server, browse to the URL [http://localhost:5000/](http://localhost:5000/).
 
-<br />
+## Getting Started with front-end
 
 Secondly, open another terminal and change to the CLIENT directory to install the project's front end dependencies using `npm`.
 
