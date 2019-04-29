@@ -137,7 +137,7 @@ export default class UserSignUp extends Component {
                         </ul>
                       </div>
                     </div>
-                      : null
+                  : null
                   }
 
                   <form onSubmit = {this.validation.bind(this, user.dispatch)}>

@@ -96,7 +96,7 @@ export default class UserSignIn extends Component {
                           </ul>
                         </div>
                     </div>
-                    : user.errors.length > 0 ?
+                  : user.errors.length > 0 ?
                     <div>
                     <h2 className="validation--errors--label">Error!</h2>
                       <div className="validation-errors">
@@ -105,7 +105,7 @@ export default class UserSignIn extends Component {
                         </ul>
                       </div>
                     </div>
-                    : null
+                  : null
                   }    
                   <form onSubmit ={e => this.validation(e, actions.signIn)}>
                     <div>

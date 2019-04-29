@@ -22,7 +22,6 @@ export default class CourseDetail extends Component {
 
   
   componentDidMount(){
-    
     localStorage.setItem('location', JSON.stringify(window.location.pathname))
     const history = this.props.history
     axios.get(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
@@ -33,7 +32,7 @@ export default class CourseDetail extends Component {
           userID: res.data.user._id
         });
       }).catch(err => {
-        if (err) history.push('/error')
+        if (err) history.push('/notfound')
       });
   };
 
@@ -51,7 +50,7 @@ export default class CourseDetail extends Component {
       if (err) history.push('/error')
     });
   };
-  
+
 
   /* RENDER ELEMENTS TO DOM
   ========================= */
@@ -73,7 +72,7 @@ export default class CourseDetail extends Component {
                           <NavLink to={`/courses/${_id}/update`} className="button">Update Course</NavLink>
                           <button className="button" onClick={() => this.deleteCourse(user)} >Delete Course</button>
                         </React.Fragment>
-                        : null
+                      : null
                       }
                     </span>
                   )

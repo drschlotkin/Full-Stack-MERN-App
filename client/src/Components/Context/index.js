@@ -69,13 +69,14 @@ class Provider extends Component {
   };
 
 
-   /* USER GET ROUTE
-   ==================
+   /* USER SIGN IN (GET ROUTE)
+   ===========================
    (1) Save logged in user to state and to local storage. 
    (2) Redirect back to previous page
-   (3) Redirect to course listings if a user is already signedIn (boolean: prevUser)*/
+   (3) Redirect to course listings if a user is already signedIn with boolean: prevUser)*/
   
   signIn = (user) => {
+    const history = this.props.history;
     let prevUser = false;
     const { emailAddress, password } = user;
     axios.get(`http://localhost:5000/api/users`, {
@@ -86,9 +87,9 @@ class Provider extends Component {
         this.setState({ ID, firstName, lastName, emailAddress, password, signedIn: true });
         if(localStorage.getItem('location') && !prevUser){
           const location = JSON.parse(localStorage.getItem('location'));
-          this.props.history.push(`${location}`);
+          history.push(`${location}`);
         }else{
-          this.props.history.push('/');
+          history.push('/');
         }
         localStorage.clear();
         localStorage.setItem('user', JSON.stringify(this.state));  
@@ -97,6 +98,8 @@ class Provider extends Component {
           let errors = [];
           errors.push('Incorrect username and/or password');
           this.setState({ errors });
+        }else{
+          history.push('/error');
         } 
     });
   };
@@ -116,7 +119,7 @@ class Provider extends Component {
       }}>
         {this.props.children}
       </AuthContext.Provider>
-      
+
     );
   };
 };

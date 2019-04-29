@@ -1,7 +1,7 @@
 /* USER SIGN OUT COMPONENT
 ========================== 
 (1) Confirm that user wants to sign out
-(2) If user is not signed in, redirect to sign in page */
+(2) Display error if user is not signed in */
 
 
 
@@ -23,10 +23,10 @@ const UserSignOut = () => (
                 <button className="button" onClick={actions.cancelSignOut}>No</button>
               </div>
             </React.Fragment>
-            : <div className="error">
-                <h1>You're not signed in!</h1>
-                <p>Sign up <NavLink to='/signup'>here</NavLink>, or sign in <NavLink to='/signin'>here</NavLink></p>
-              </div>
+          : <div className="error">
+              <h1>You're not signed in!</h1>
+              <p>Sign up <NavLink to='/signup'>here</NavLink>, or sign in <NavLink to='/signin'>here</NavLink></p>
+            </div>
           }
         </div>
       )}

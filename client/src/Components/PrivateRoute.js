@@ -1,7 +1,8 @@
 /* HIGHER-ORDER COMPONENT FOR PROTECTED ROUTES
 ==============================================
 (1) Redirect to sign in page if user attempts to create or update course 
-(2) Using local storage, redirect back to page that user attempted to access */
+(2) Using local storage, redirect back to page that user attempted to access 
+(3) A lot of the logic here is to prevent users from accessing routes by typing the URL in the address bar */
 
 
 
@@ -31,6 +32,8 @@ const PrivateRoute = ({ component: Component, ...rest}) => {
     if (pathname === `/courses/${courseID}/update`) newPath = `/courses/${courseID}/update`;
   };
 
+  if (newPath.length === 0) newPath = '/notfound'
+  
   return <Route {...rest} render = {props => (
     context.user.signedIn
       ? <Component {...props} />

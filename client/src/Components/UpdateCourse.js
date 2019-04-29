@@ -88,8 +88,8 @@ class UpdateCourse extends Component {
     });
   };
 
-  
-   /* RENDER ELEMENTS TO DOM
+
+  /* RENDER ELEMENTS TO DOM
   ========================= */
   render(){
     const { errors } = this.state;
@@ -116,7 +116,7 @@ class UpdateCourse extends Component {
                         </ul>
                       </div>
                   </div>
-                  : null
+                : null
                 }
 
                 <div>
