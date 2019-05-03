@@ -1,11 +1,11 @@
 # Full Stack MERN App
 
-<a href="https://teamtreehouse.com" target="_blank">Team Treehouse</a> Full Stack Techdegree - Project #10
-
 ## Introduction
 
 * Created with MERN by Ewen Earle
-* Main design (HTML and CSS) provided by Team Treehouse
+* School database where users can interact with the application by retrieving a list of courses, view details for specific course, as well as create, update and delete courses in the database.
+* Users are required to create an account and sign in to make changes.
+* This was the final project of the Full Stack Javascript Techdegree program with <a href="https://teamtreehouse.com" target="_blank">Team Treehouse</a>
 
 ## Set Up Back-End
 
