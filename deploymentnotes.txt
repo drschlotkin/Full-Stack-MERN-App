@@ -1,0 +1,33 @@
+To make this application run locally again:
+
+in app.js in the api folder, change 8080 back to 5000
+
+in the client directory, replace all routes with
+http://localhost:5000/   e.g. axios.get(`http://localhost:5000/api/courses`)
+
+The root folder contained the folders: api, client & two files .gitignore & readme.md
+I moved everything from the api folder to the root folder
+
+.gitignore from client folder
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
