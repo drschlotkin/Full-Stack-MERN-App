@@ -27,7 +27,7 @@ app.use(jsonParser());
 mongoose.connect("mongodb://ewen:ewenearle1@ds261626.mlab.com:61626/course-directory", { useNewUrlParser: true });
 mongoose.set('useCreateIndex', true);
 const db = mongoose.connection;
-
+app.use(express.static('client/build'));
 // Error handler for database
 db.on("error", err => {
   console.error("Connection error:", err)
@@ -83,12 +83,16 @@ app.use((err, req, res, next) => {
 });
 
 // Serve static assets if in production
-if (process.env.NODE_ENV === 'production'){
-  app.use(express.static('client/build'))
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-  })
-}
+// if (process.env.NODE_ENV === 'production'){
+//   app.use(express.static('client/build'))
+//   app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+//   })
+// }
+router.use(function(req, res) {
+	res.sendFile(path.join(__dirname, './client/build/index.html'));
+});
+
 
 // Set our port
 app.set('port', process.env.PORT || 5000);
