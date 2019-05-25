@@ -29,6 +29,7 @@ router.get('/courses', (req, res, next) => {
 Retrieve course by ID */
 
 router.get('/courses/:id', (req, res, next) => {
+  console.dir('here?')
   Course.findById(req.params.id)
     .populate('user', 'firstName lastName')
     .then((course) => {

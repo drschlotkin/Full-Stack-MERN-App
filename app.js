@@ -91,7 +91,7 @@ if (process.env.NODE_ENV === 'production'){
 }
 
 // Set our port
-app.set('port', process.env.PORT || 8080);
+app.set('port', process.env.PORT || 5000);
 
 
 
