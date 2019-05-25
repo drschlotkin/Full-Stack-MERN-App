@@ -19,7 +19,7 @@ export default class Courses extends Component {
   componentDidMount(){
     localStorage.setItem('location', JSON.stringify(window.location.pathname));
     const history = this.props.history;
-    axios.get(`http://localhost:5000/api/courses`)
+    axios.get(`api/courses`)
       .then(res => {
         this.setState({ courses: res.data });
       }).catch(err => {

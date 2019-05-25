@@ -47,7 +47,7 @@ export default class CreateCourse extends Component {
         username: user.emailAddress,
         password: user.password
       },
-      url: `http://localhost:5000/api/courses`,
+      url: `api/courses`,
       data: { title, description, estimatedTime, materialsNeeded }
       }).then(() => {
         history.push('/courses');

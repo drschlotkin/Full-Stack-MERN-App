@@ -69,9 +69,9 @@ export default class UserSignUp extends Component {
   signup = (dispatch) => {
     const { firstName, lastName, emailAddress, password } = this.state;
     const history = this.props.history
-    axios.post(`http://localhost:5000/api/users`, { firstName, lastName, emailAddress, password, isSignedIn: true})
+    axios.post(`api/users`, { firstName, lastName, emailAddress, password, isSignedIn: true})
       .then(() => {
-        axios.get(`http://localhost:5000/api/users`, { auth: { username: emailAddress, password } })
+        axios.get(`api/users`, { auth: { username: emailAddress, password } })
           .then(res => {
             const { ID } = res.data;
             const user = { ID, firstName, lastName, emailAddress, password, signedIn: true };
