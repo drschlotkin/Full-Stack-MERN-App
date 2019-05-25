@@ -1,5 +1,7 @@
 To make this application run locally again:
 
+I removed this from database package.json "start": "nodemon ./app.js",
+
 in app.js in the api folder, change 8080 back to 5000
 
 in the client directory, remove all localhost routes
