@@ -6,7 +6,7 @@ in the client directory, replace all routes with
 http://localhost:5000/   e.g. axios.get(`http://localhost:5000/api/courses`)
 
 The root folder contained the folders: api, client & two files .gitignore & readme.md
-I moved everything from the api folder to the root folder
+I moved everything from the api folder to the root folder. I also commented out the manifest.json link tag in index.html
 
 .gitignore from client folder
 

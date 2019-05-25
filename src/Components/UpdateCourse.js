@@ -26,7 +26,7 @@ class UpdateCourse extends Component {
 
   componentDidMount = () => {
     const history = this.props.history
-    axios.get(`api/courses/${this.props.match.params.id}`)
+    axios.get(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
       .then(res => {
         const { user, title, description, estimatedTime, materialsNeeded } = res.data;
         if(user._id !== this.context.user.ID) return history.push('/forbidden');
@@ -64,7 +64,7 @@ class UpdateCourse extends Component {
     axios({
       method: 'put',
       auth: { username: emailAddress, password },
-      url: `api/courses/${url}`,
+      url: `http://localhost:5000/api/courses/${url}`,
       data: { title, description, estimatedTime, materialsNeeded }
       }).then(() => {
         history.push(`/courses/${url}`);
