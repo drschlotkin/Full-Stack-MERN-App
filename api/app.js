@@ -23,7 +23,7 @@ app.use(jsonParser());
 
 
 // Connect to Mongoose
-mongoose.connect("mongodb://localhost:27017/fsjstd-restapi", { useNewUrlParser: true });
+mongoose.connect("mongodb://ewen:ewenearle1@ds261626.mlab.com:61626/course-directory", { useNewUrlParser: true });
 mongoose.set('useCreateIndex', true);
 const db = mongoose.connection;
 
