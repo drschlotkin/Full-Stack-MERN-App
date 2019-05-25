@@ -2,8 +2,9 @@ To make this application run locally again:
 
 in app.js in the api folder, change 8080 back to 5000
 
-in the client directory, replace all routes with
+in the client directory, remove all localhost routes
 http://localhost:5000/   e.g. axios.get(`http://localhost:5000/api/courses`)
+should be axios.get(`courses`)
 
 The root folder contained the folders: api, client & two files .gitignore & readme.md
 I moved everything from the api folder to the root folder. I also commented out the manifest.json link tag in index.html

@@ -24,7 +24,7 @@ export default class CourseDetail extends Component {
   componentDidMount(){
     localStorage.setItem('location', JSON.stringify(window.location.pathname))
     const history = this.props.history
-    axios.get(`api/courses/${this.props.match.params.id}`)
+    axios.get(`courses/${this.props.match.params.id}`)
       .then(res => {
         this.setState({
           course: res.data,
@@ -39,7 +39,7 @@ export default class CourseDetail extends Component {
 
   deleteCourse = (user) => {
     const history = this.props.history
-    axios.delete(`api/${window.location.pathname}`, {
+    axios.delete(`${window.location.pathname}`, {
       auth: {
         username: user.emailAddress,
         password: user.password
