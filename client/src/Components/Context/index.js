@@ -79,7 +79,7 @@ class Provider extends Component {
     const history = this.props.history;
     let prevUser = false;
     const { emailAddress, password } = user;
-    axios.get(`users`, {
+    axios.get('/api/users', {
       auth: { username: emailAddress, password }
       }).then(res => {
         const { ID, firstName, lastName, emailAddress } = res.data;

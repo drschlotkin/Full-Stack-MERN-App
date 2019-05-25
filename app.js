@@ -7,6 +7,7 @@ const UserRoute = require("./routes/user");
 const CourseRoute = require("./routes/course");
 const mongoose = require("mongoose");
 const jsonParser = require("body-parser").json;
+const path = require('path');
 
 // Create the Express app
 const app = express();
@@ -81,8 +82,17 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Serve static assets if in production
+if (process.env.NODE_ENV === 'production'){
+  app.use(express.static('client/build'))
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  })
+}
+
 // Set our port
 app.set('port', process.env.PORT || 8080);
+
 
 
 // Start listening on our port
