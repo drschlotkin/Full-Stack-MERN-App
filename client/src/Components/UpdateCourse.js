@@ -64,7 +64,7 @@ class UpdateCourse extends Component {
     axios({
       method: 'put',
       auth: { username: emailAddress, password },
-      url: `http://localhost:5000/api/courses/${url}`,
+      url: `api/courses/${url}`,
       data: { title, description, estimatedTime, materialsNeeded }
       }).then(() => {
         history.push(`/courses/${url}`);
