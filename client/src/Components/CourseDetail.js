@@ -71,7 +71,7 @@ export default class CourseDetail extends Component {
                     <span>    
                       {user.signedIn && user.ID === userID ?
                         <React.Fragment>
-                          <NavLink to={`courses/${_id}/update`} className="button">Update Course</NavLink>
+                          <NavLink to={`/${_id}/update`} className="button">Update Course</NavLink>
                           <button className="button" onClick={() => this.deleteCourse(user)} >Delete Course</button>
                         </React.Fragment>
                       : null
