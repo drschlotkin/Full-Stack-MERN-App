@@ -13,7 +13,7 @@ const { Course } = require('../models/CourseModel');
 ===================
 Retrieve list of all currently registered courses */
 
-router.get('/courses', (req, res, next) => {
+router.get('//', (req, res, next) => {
   Course.find()
     .populate('user', 'firstName lastName')
     .then((course) => {
@@ -28,7 +28,7 @@ router.get('/courses', (req, res, next) => {
 ===================
 Retrieve course by ID */
 
-router.get('/courses/:id', (req, res, next) => {
+router.get('/:id', (req, res, next) => {
   console.dir('here?')
   Course.findById(req.params.id)
     .populate('user', 'firstName lastName')
@@ -44,7 +44,7 @@ router.get('/courses/:id', (req, res, next) => {
 ====================
 Create a new course */
 
-router.post('/courses', authenticateUser, (req, res, next) => {
+router.post('/', authenticateUser, (req, res, next) => {
   const newCourse = req.body;
   const course = new Course({
     title : newCourse.title,
@@ -67,7 +67,7 @@ router.post('/courses', authenticateUser, (req, res, next) => {
 ===================
 Update a course by ID if registered to current user*/
 
-router.put('/courses/:id', authenticateUser, (req, res, next) => {
+router.put('/:id', authenticateUser, (req, res, next) => {
   const id = {_id : req.params.id} 
   const opts = { runValidators: true };
   Course.findById(req.params.id)
@@ -102,7 +102,7 @@ router.put('/courses/:id', authenticateUser, (req, res, next) => {
 ===================
 Delete course if registered to current user */
 
-router.delete('/courses/:id', authenticateUser, (req, res, next) => {
+router.delete('/:id', authenticateUser, (req, res, next) => {
   const id = {_id : req.params.id};
   Course.findById(req.params.id)
     .then((course) => {

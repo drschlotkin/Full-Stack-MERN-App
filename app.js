@@ -63,6 +63,7 @@ if (process.env.NODE_ENV === 'production'){
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   })
 }
+
 // Friendly greeting for the root route
 app.get('/', (req, res) => {
   res.json({
@@ -88,12 +89,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-
-
 // Set our port
 app.set('port', process.env.PORT || 5000);
-
-
 
 // Start listening on our port
 const server = app.listen(app.get('port'), () => {
