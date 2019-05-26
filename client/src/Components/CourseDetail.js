@@ -41,8 +41,8 @@ export default class CourseDetail extends Component {
   deleteCourse = (user, id) => {
     const history = this.props.history
     console.log(id)
-    console.log('window' + window.location.pathname)
-    axios.delete(`${window.location.pathname}`, {
+    console.log('window ' + window.location.pathname)
+    axios.delete(`/api/courses/${id}`, {
       auth: {
         username: user.emailAddress,
         password: user.password
