@@ -60,7 +60,9 @@ class UpdateCourse extends Component {
     const { title, description, estimatedTime, materialsNeeded } = this.state;
     const { emailAddress, password } = user;
     const history = this.props.history
+    
     const url = this.props.match.params.id;
+    console.log(url)
     axios({
       method: 'put',
       auth: { username: emailAddress, password },
