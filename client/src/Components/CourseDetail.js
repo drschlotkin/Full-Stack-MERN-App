@@ -24,7 +24,7 @@ export default class CourseDetail extends Component {
   componentDidMount(){
     localStorage.setItem('location', JSON.stringify(window.location.pathname))
     const history = this.props.history 
-    axios.get(`api/courses/${this.props.match.params.id}`)
+    axios.get(`/api/courses/${this.props.match.params.id}`)
       .then(res => {
     
         this.setState({
