@@ -56,7 +56,13 @@ const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'tr
 app.use("/api", UserRoute);
 app.use("/api", CourseRoute);
 
-
+// Serve static assets if in production
+if (process.env.NODE_ENV === 'production'){
+  app.use(express.static('client/build'))
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  })
+}
 // Friendly greeting for the root route
 app.get('/', (req, res) => {
   res.json({
@@ -82,13 +88,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Serve static assets if in production
-if (process.env.NODE_ENV === 'production'){
-  app.use(express.static('client/build'))
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-  })
-}
+
 
 // Set our port
 app.set('port', process.env.PORT || 5000);
