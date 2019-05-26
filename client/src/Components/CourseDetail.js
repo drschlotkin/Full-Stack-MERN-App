@@ -38,9 +38,9 @@ export default class CourseDetail extends Component {
   };
 
 
-  deleteCourse = (user) => {
+  deleteCourse = (user, id) => {
     const history = this.props.history
-    console.log(window.location.pathname)
+    console.log(id)
     
     axios.delete(`${window.location.pathname}`, {
       auth: {
@@ -69,13 +69,13 @@ export default class CourseDetail extends Component {
               <Consumer>
                 {({user}) => {
                   
-                  console.log(_id)
+                  console.log(`courses/${_id}/update`)
                   return (
                     <span>    
                       {user.signedIn && user.ID === userID ?
                         <React.Fragment>
-                          <NavLink to={`/courses/${_id}/update`} className="button">Update Course</NavLink>
-                          <button className="button" onClick={() => this.deleteCourse(user)} >Delete Course</button>
+                          <NavLink to={`courses/${_id}/update`} className="button">Update Course</NavLink>
+                          <button className="button" onClick={() => this.deleteCourse(user, _id)} >Delete Course</button>
                         </React.Fragment>
                       : null
                       }
