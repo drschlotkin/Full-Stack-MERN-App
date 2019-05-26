@@ -25,8 +25,9 @@ class UpdateCourse extends Component {
 
 
   componentDidMount = () => {
-    console.log('here please?')
+    
     const history = this.props.history
+    console.log(`courses/${this.props.match.params.id}`)
     axios.get(`courses/${this.props.match.params.id}`)
       .then(res => {
         const { user, title, description, estimatedTime, materialsNeeded } = res.data;

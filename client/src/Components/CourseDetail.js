@@ -26,7 +26,6 @@ export default class CourseDetail extends Component {
     const history = this.props.history 
     axios.get(`/api/courses/${this.props.match.params.id}`)
       .then(res => {
-    
         this.setState({
           course: res.data,
           user: res.data.user,
@@ -40,8 +39,6 @@ export default class CourseDetail extends Component {
 
   deleteCourse = (user, id) => {
     const history = this.props.history
-    console.log(id)
-    console.log('window ' + window.location.pathname)
     axios.delete(`/api/courses/${id}`, {
       auth: {
         username: user.emailAddress,
@@ -68,8 +65,6 @@ export default class CourseDetail extends Component {
            
               <Consumer>
                 {({user}) => {
-                  
-                  console.log(`courses/${_id}/update`)
                   return (
                     <span>    
                       {user.signedIn && user.ID === userID ?
