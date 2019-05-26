@@ -28,7 +28,7 @@ class UpdateCourse extends Component {
     
     const history = this.props.history
     console.log(`courses/${this.props.match.params.id}`)
-    axios.get(`courses/${this.props.match.params.id}`)
+    axios.get(`/api/courses/${this.props.match.params.id}`)
       .then(res => {
         const { user, title, description, estimatedTime, materialsNeeded } = res.data;
         if(user._id !== this.context.user.ID) return history.push('/forbidden');
